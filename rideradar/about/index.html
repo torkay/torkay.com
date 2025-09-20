@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>About RideRadar • torkay.com</title>
+  <meta name="description" content="RideRadar is a lightweight vehicle-search project by Torrin Kay. We aggregate public listing data to make car shopping faster and clearer." />
+  <link rel="icon" href="/logo.svg">
+  <style>
+    :root{--fg:#0b132b;--muted:#425466;--bg:#fff;--brand:#2d6cdf}
+    *{box-sizing:border-box} body{margin:0;font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial;background:var(--bg);color:var(--fg)}
+    .wrap{max-width:860px;margin:auto;padding:48px 20px}
+    h1{font-size:2.1rem;margin:0 0 8px} h2{font-size:1.25rem;margin:24px 0 8px}
+    p{margin:0 0 14px;color:var(--muted)} a{color:var(--brand);text-decoration:none}
+    a:hover{text-decoration:underline}
+    .card{border:1px solid #e5e7eb;border-radius:14px;padding:18px;margin:14px 0;background:#fff}
+    .pill{display:inline-block;font-size:.8rem;background:#eef2ff;color:#334155;border-radius:999px;padding:4px 10px;margin:6px 0}
+    footer{margin-top:40px;font-size:.9rem;color:#6b7280}
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <span class="pill">RideRadar</span>
+    <h1>About RideRadar</h1>
+    <p><strong>RideRadar</strong> is a lightweight search project by <a href="https://www.torkay.com/">Torrin Kay (torkay.com)</a> that helps Australians browse vehicle listings faster. We aggregate public listing metadata and present it in a clear, comparable format to save shoppers time.</p>
+
+    <h2>What we do</h2>
+    <div class="card">
+      <ul>
+        <li>Fetch public listing data from multiple sources (official APIs where available, and compliant HTML fetching elsewhere).</li>
+        <li>Normalize specs such as price, odometer, body, drivetrain, and photos for easier comparison.</li>
+        <li>Link you to the original listing to enquire or purchase directly with the seller/marketplace.</li>
+      </ul>
+    </div>
+
+    <h2>Data & privacy</h2>
+    <p>RideRadar does <em>not</em> process personal user data. We handle only public listing information and basic, privacy-respecting operational logs. If analytics are enabled, they are aggregate and non-identifying.</p>
+    <p>For details, see our <a href="/privacy/">Privacy Policy</a>.</p>
+
+    <h2>eBay notice</h2>
+    <p>RideRadar may use the eBay Developers Program and eBay public APIs to access listing data. RideRadar is an independent project and is not affiliated with, endorsed by, or sponsored by eBay Inc.</p>
+
+    <h2>Contact</h2>
+    <p>Email: <a href="mailto:contact@torkay.com">contact@torkay.com</a></p>
+
+    <footer>© <span id="y"></span> RideRadar • torkay.com</footer>
+  </main>
+
+  <script>document.getElementById('y').textContent=new Date().getFullYear()</script>
+</body>
+</html>
