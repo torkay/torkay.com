@@ -1,11 +1,29 @@
 import"./modulepreload-polyfill-3cfb730f.js";
 
-// Instant load - no typing animation
+// Typing animation function
+function typeText(elementId, text, speed, callback) {
+    let index = 0;
+    function type() {
+        if (index < text.length) {
+            document.getElementById(elementId).innerHTML += text.charAt(index);
+            index++;
+            setTimeout(type, speed);
+        } else if (callback) {
+            callback();
+        }
+    }
+    type();
+}
+
+// Load with typing animation
 window.onload = function() {
-    document.getElementById("title").innerHTML = "Welcome to torkay.com 👋";
-    document.getElementById("subtitle").innerHTML = '==> Type "help" for available commands';
-    document.getElementById("terminal").innerHTML = "user@localhost:~$";
-    document.getElementById("terminal-input").focus();
+    typeText("title", "Welcome to torkay.com 👋", 25, function() {
+        typeText("subtitle", '==> Type "help" for available commands', 25, function() {
+            typeText("terminal", "user@localhost:~$", 25, function() {
+                document.getElementById("terminal-input").focus();
+            });
+        });
+    });
 };
 
 document.addEventListener("DOMContentLoaded", () => {
