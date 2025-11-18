@@ -44,14 +44,15 @@ document.addEventListener("DOMContentLoaded", () => {
             // Handle commands
             if (command === "help") {
                 output.innerHTML = `<span class="a">Available Commands</span><br/>
-    ==> about     - Learn about me<br/>
-    ==> work      - Sorted Systems (digital consultancy)<br/>
-    ==> projects  - View my portfolio<br/>
-    ==> contact   - Get in touch<br/>
-    ==> github    - Visit my GitHub<br/>
-    ==> linkedin  - Connect on LinkedIn<br/>
-    ==> status    - Current availability<br/>
-    ==> help      - Show this menu`;
+    ==> about      - Learn about me<br/>
+    ==> work       - Sorted Systems (digital consultancy)<br/>
+    ==> projects   - View my portfolio<br/>
+    ==> realestate - Real estate property viewer<br/>
+    ==> contact    - Get in touch<br/>
+    ==> github     - Visit my GitHub<br/>
+    ==> linkedin   - Connect on LinkedIn<br/>
+    ==> status     - Current availability<br/>
+    ==> help       - Show this menu`;
             }
             else if (command === "about") {
                 output.innerHTML = `<span class="a">Torrin Kay</span><br/>
@@ -67,10 +68,18 @@ Focused on building practical solutions through software engineering and machine
                 });
             }
             else if (command === "projects" || command === "portfolio") {
+                output.innerHTML = `<span class="a">Featured Projects</span><br/><br/>
+    <span class="a">Real Estate Viewer</span><br/>
+    Interactive property search and visualization platform<br/>
+    ==> Type <span class="a">realestate</span> to view<br/><br/>
+    <span class="a">Full Portfolio</span><br/>
+    ==> <a href="/portfolio" class="a">View complete portfolio</a>`;
+            }
+            else if (command === "realestate") {
                 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-                output.innerHTML = "Loading portfolio...";
+                output.innerHTML = "Loading Real Estate Viewer...";
                 delay(500).then(() => {
-                    window.location.href = "/portfolio";
+                    window.location.href = "https://realestate.torkay.com";
                 });
             }
             else if (command === "contact") {
@@ -117,7 +126,7 @@ Focused on building practical solutions through software engineering and machine
 document.addEventListener("DOMContentLoaded", () => {
     const input = document.getElementById("terminal-input");
     const suggestionElement = document.getElementById("autosuggestion");
-    const commands = ["help", "about", "work", "projects", "portfolio", "contact", "status", "github", "linkedin"];
+    const commands = ["help", "about", "work", "projects", "portfolio", "realestate", "contact", "status", "github", "linkedin"];
 
     function updateSuggestion() {
         const currentInput = input.value.split(" ").pop();
