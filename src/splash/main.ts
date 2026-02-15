@@ -1,3 +1,4 @@
+import './splash.css';
 import { createBlob } from './blob';
 import { createParticles } from './particles';
 import {
