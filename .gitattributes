@@ -1,7 +1,0 @@
-# Mark compiled Vite bundles as generated so they don't inflate GitHub language stats
-assets/*.js linguist-generated=true
-assets/*.css linguist-generated=true
-portfolio/assets/*.js linguist-generated=true
-portfolio/assets/*.css linguist-generated=true
-rideradar/assets/*.js linguist-generated=true
-rideradar/assets/*.css linguist-generated=true
