@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>BitBit Demo Reference Guide</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+        :root {
+            --background: hsl(240 10% 3.9%);
+            --foreground: hsl(0 0% 98%);
+            --card: hsl(240 10% 3.9%);
+            --card-foreground: hsl(0 0% 98%);
+            --secondary: hsl(240 3.7% 15.9%);
+            --secondary-foreground: hsl(0 0% 98%);
+            --muted: hsl(240 3.7% 15.9%);
+            --muted-foreground: hsl(240 5% 64.9%);
+            --accent: hsl(240 3.7% 15.9%);
+            --accent-foreground: hsl(0 0% 98%);
+            --border: hsl(240 3.7% 15.9%);
+            --ring: hsl(240 4.9% 83.9%);
+            --radius: 0.5rem;
+            --brand: #10b981;
+            --brand-light: #34d399;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: var(--background);
+            color: var(--muted-foreground);
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        main {
+            max-width: 1152px;
+            margin: 0 auto;
+            padding: 56px 48px;
+        }
+
+        @media (max-width: 768px) {
+            main { padding: 32px 20px; }
+        }
+
+        section { margin-bottom: 48px; }
+
+        h1 { color: var(--foreground); font-weight: 700; font-size: 2rem; line-height: 1.2; margin-bottom: 8px; letter-spacing: -0.025em; }
+        h2 { color: var(--foreground); font-weight: 600; font-size: 1.5rem; line-height: 1.3; margin-bottom: 20px; margin-top: 0; letter-spacing: -0.025em; }
+        h3 { color: var(--foreground); font-weight: 600; font-size: 1.125rem; margin-bottom: 12px; }
+        h4 { color: var(--muted-foreground); font-weight: 600; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 12px; }
+        p { margin-bottom: 16px; font-size: 0.9375rem; }
+        b, strong { color: var(--foreground); font-weight: 600; }
+        hr { border: none; height: 1px; background: var(--border); margin: 24px 0; }
+
+        .page-header { text-align: center; margin-bottom: 48px; padding-bottom: 32px; border-bottom: 1px solid var(--border); }
+        .tagline { color: var(--muted-foreground); font-size: 1.05rem; margin-bottom: 8px; }
+        .byline { color: var(--muted-foreground); font-size: 0.85rem; opacity: 0.6; }
+
+        .card {
+            background: var(--secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px;
+            margin-bottom: 16px;
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        @media (max-width: 768px) {
+            .card-grid { grid-template-columns: 1fr; }
+        }
+
+        .badge {
+            display: inline-block;
+            font-size: 0.6875rem;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 9999px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .badge-built { background: rgba(16, 185, 129, 0.15); color: var(--brand); }
+        .badge-tier1 { background: rgba(59, 130, 246, 0.15); color: #60a5fa; }
+        .badge-tier2 { background: rgba(168, 85, 247, 0.15); color: #c084fc; }
+
+        blockquote {
+            border-left: 3px solid var(--brand);
+            padding: 16px 20px;
+            margin: 16px 0;
+            background: rgba(16, 185, 129, 0.05);
+            border-radius: 0 var(--radius) var(--radius) 0;
+            font-style: italic;
+            color: var(--foreground);
+            font-size: 0.9375rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 16px;
+            font-size: 0.875rem;
+        }
+        thead th {
+            text-align: left;
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--border);
+            color: var(--foreground);
+            font-weight: 600;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        tbody td {
+            padding: 10px 12px;
+            border-bottom: 1px solid hsl(240 3.7% 12%);
+            vertical-align: top;
+        }
+        tbody tr:last-child td { border-bottom: none; }
+
+        .agent-row { display: flex; align-items: flex-start; gap: 16px; padding: 16px 0; border-bottom: 1px solid hsl(240 3.7% 12%); }
+        .agent-row:last-child { border-bottom: none; }
+        .agent-num { color: var(--brand); font-weight: 700; font-size: 0.875rem; min-width: 24px; margin-top: 2px; }
+        .agent-name { color: var(--foreground); font-weight: 600; font-size: 0.9375rem; }
+        .agent-meta { font-size: 0.8125rem; color: var(--muted-foreground); margin-top: 4px; }
+        .agent-cost { color: var(--brand-light); font-weight: 500; }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        .stat-card {
+            background: var(--secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 16px;
+            text-align: center;
+        }
+        .stat-value { color: var(--foreground); font-weight: 700; font-size: 1.5rem; line-height: 1; }
+        .stat-label { color: var(--muted-foreground); font-size: 0.75rem; margin-top: 4px; text-transform: uppercase; letter-spacing: 0.05em; }
+
+        .flow-step {
+            display: flex;
+            gap: 16px;
+            padding: 16px;
+            background: var(--secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            margin-bottom: 12px;
+        }
+        .flow-num {
+            background: var(--brand);
+            color: var(--background);
+            font-weight: 700;
+            font-size: 0.875rem;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .flow-title { color: var(--foreground); font-weight: 600; font-size: 0.9375rem; }
+        .flow-time { color: var(--brand-light); font-size: 0.8125rem; font-weight: 500; }
+        .flow-desc { font-size: 0.875rem; margin-top: 4px; }
+        .flow-impact { font-size: 0.8125rem; color: var(--brand-light); margin-top: 6px; font-style: italic; }
+
+        .quote-card {
+            background: var(--secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px;
+            margin-bottom: 12px;
+        }
+        .quote-text { color: var(--foreground); font-style: italic; font-size: 0.9375rem; margin-bottom: 8px; line-height: 1.6; }
+        .quote-context { font-size: 0.75rem; color: var(--muted-foreground); text-transform: uppercase; letter-spacing: 0.05em; }
+
+        .reminder-list { list-style: none; padding: 0; counter-reset: reminder; }
+        .reminder-list li {
+            counter-increment: reminder;
+            padding: 12px 16px 12px 48px;
+            position: relative;
+            border-bottom: 1px solid hsl(240 3.7% 12%);
+            font-size: 0.9375rem;
+        }
+        .reminder-list li::before {
+            content: counter(reminder);
+            position: absolute;
+            left: 16px;
+            top: 12px;
+            color: var(--brand);
+            font-weight: 700;
+            font-size: 0.875rem;
+        }
+        .reminder-list li:last-child { border-bottom: none; }
+
+        .tech-tag {
+            display: inline-block;
+            padding: 4px 10px;
+            background: var(--secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            font-size: 0.8125rem;
+            margin: 3px;
+            color: var(--foreground);
+            font-weight: 500;
+        }
+
+        .confidence-bar {
+            display: flex;
+            border-radius: var(--radius);
+            overflow: hidden;
+            height: 32px;
+            margin: 12px 0;
+        }
+        .confidence-bar div {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.6875rem;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+        }
+        .conf-auto { background: rgba(16, 185, 129, 0.25); color: var(--brand-light); flex: 3; }
+        .conf-ask { background: rgba(234, 179, 8, 0.2); color: #facc15; flex: 3; }
+        .conf-escalate { background: rgba(239, 68, 68, 0.2); color: #f87171; flex: 1.1; }
+
+        .toc {
+            background: var(--secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px;
+            margin-bottom: 48px;
+        }
+        .toc h3 { margin-bottom: 16px; }
+        .toc ol { list-style: none; padding: 0; counter-reset: toc; }
+        .toc li { counter-increment: toc; margin-bottom: 6px; }
+        .toc a {
+            color: var(--muted-foreground);
+            text-decoration: none;
+            font-size: 0.9375rem;
+            transition: color 0.15s;
+        }
+        .toc a:hover { color: var(--brand); }
+        .toc a::before {
+            content: counter(toc) ".";
+            color: var(--brand);
+            font-weight: 600;
+            margin-right: 8px;
+            font-size: 0.875rem;
+        }
+
+        .pricing-highlight {
+            background: linear-gradient(135deg, rgba(16,185,129,0.08) 0%, rgba(59,130,246,0.08) 100%);
+            border: 1px solid rgba(16,185,129,0.2);
+            border-radius: var(--radius);
+            padding: 20px;
+            margin-bottom: 16px;
+        }
+
+        @media print {
+            body { background: #fff; color: #333; }
+            .card, .stat-card, .flow-step, .quote-card, .toc { border-color: #ddd; background: #f9f9f9; }
+            h1, h2, h3, .agent-name, .flow-title, .stat-value, strong, b { color: #111; }
+        }
+    </style>
+</head>
+<body>
+<main>
+
+    <!-- HEADER -->
+    <div class="page-header">
+        <h1>BitBit Demo Reference Guide</h1>
+        <p class="tagline">Andy's Investor Meeting — Quick-Glance Cheat Sheet</p>
+        <p class="byline">Last updated: 2 April 2026</p>
+    </div>
+
+    <!-- TABLE OF CONTENTS -->
+    <nav class="toc">
+        <h3>Contents</h3>
+        <ol>
+            <li><a href="#pitch">Elevator Pitch</a></li>
+            <li><a href="#industries">Target Industries &amp; Agent Bundles</a></li>
+            <li><a href="#agents">Agent Catalog (11 Agents)</a></li>
+            <li><a href="#pricing">Pricing Strategy</a></li>
+            <li><a href="#demos">Key Demo Flows</a></li>
+            <li><a href="#sales">Sales Positioning</a></li>
+            <li><a href="#quotes">Andy's Own Quotes</a></li>
+            <li><a href="#tech">Technical Architecture</a></li>
+            <li><a href="#live">What's Live Right Now</a></li>
+            <li><a href="#numbers">Quick Reference Numbers</a></li>
+            <li><a href="#reminders">Reminders for Tomorrow</a></li>
+        </ol>
+    </nav>
+
+    <!-- 1. ELEVATOR PITCH -->
+    <section id="pitch">
+        <h2>1. Elevator Pitch</h2>
+        <div class="card">
+            <p>BitBit is a modular AI operations platform that gives small businesses an <strong>always-on, industry-specific personal assistant</strong>. Businesses text it on WhatsApp, send voice notes, or use the dashboard — and BitBit autonomously handles leads, invoices, client comms, proposals, and more through specialised AI agents that snap together like lego bricks.</p>
+            <p>It replaces <strong>$200+/month in SaaS tools</strong> (HubSpot, Front, Asana, etc.) with a single intelligent system that learns the business and gets smarter over time.</p>
+            <blockquote>"Send a voice note. The problem disappears."</blockquote>
+        </div>
+    </section>
+
+    <!-- 2. TARGET INDUSTRIES -->
+    <section id="industries">
+        <h2>2. Target Industries &amp; Agent Bundles</h2>
+
+        <h4>Tier 1 — Launch Verticals</h4>
+        <div class="card-grid">
+            <div class="card">
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+                    <h3 style="margin:0">Marketing Agencies</h3>
+                    <span class="badge badge-tier1">Primary</span>
+                </div>
+                <p style="margin-bottom:8px"><strong>Use cases:</strong> Lead intake, client comms, invoicing, proposals, content scripts</p>
+                <p style="margin-bottom:8px"><strong>Agent bundle:</strong> Lead Swarm + Invoice Flow + Client Comms + Proposal Bot + Ad Script Gen + Channel Triage + Sentry</p>
+                <p style="margin-bottom:0"><strong>Why:</strong> Andy runs AWU on it. <em>"I need to do it in order to sell it."</em></p>
+            </div>
+            <div class="card">
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+                    <h3 style="margin:0">Trades / Electricians</h3>
+                    <span class="badge badge-tier1">Highest Conviction</span>
+                </div>
+                <p style="margin-bottom:8px"><strong>Use cases:</strong> Voice-note invoicing from job sites, lead response, quoting</p>
+                <p style="margin-bottom:8px"><strong>Agent bundle:</strong> Lead Swarm + Invoice Flow + Client Comms + Sentry</p>
+                <p style="margin-bottom:8px"><strong>Why:</strong> Voice-first. Tradies text from job sites. AU electricians = 39% of trade searches. Massive market, zero AI adoption.</p>
+                <p style="margin-bottom:0"><strong>Key demo:</strong> Tradie sends WhatsApp voice note <em>"Just finished the bathroom at John's, invoice him for $850"</em> → BitBit creates &amp; sends invoice.</p>
+            </div>
+            <div class="card">
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+                    <h3 style="margin:0">Enterprise / Government</h3>
+                    <span class="badge badge-tier1">Highest Revenue</span>
+                </div>
+                <p style="margin-bottom:8px"><strong>Use cases:</strong> Tender hunting, compliance checking, response drafting</p>
+                <p style="margin-bottom:8px"><strong>Agent bundle:</strong> Tender Hunter + Proposal Bot + Client Comms + Sentry</p>
+                <p style="margin-bottom:8px"><strong>Price point:</strong> $1-2k/month (vs $2-30k for tender consultants)</p>
+                <p style="margin-bottom:0"><strong>Why:</strong> <em>"I know people that will pay for that if it's working."</em> — Andy</p>
+            </div>
+        </div>
+
+        <h4>Tier 2 — Expansion Verticals</h4>
+        <div class="card-grid">
+            <div class="card">
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+                    <h3 style="margin:0">Dentists / Healthcare</h3>
+                    <span class="badge badge-tier2">Tier 2</span>
+                </div>
+                <p style="margin-bottom:8px"><strong>Use cases:</strong> Patient comms, appointment management, review responses</p>
+                <p style="margin-bottom:0"><strong>Agents:</strong> Client Comms + Lead Swarm + Sentry</p>
+            </div>
+            <div class="card">
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+                    <h3 style="margin:0">Property / Real Estate</h3>
+                    <span class="badge badge-tier2">Tier 2</span>
+                </div>
+                <p style="margin-bottom:8px"><strong>Use cases:</strong> Listing management, client follow-ups, market reports</p>
+                <p style="margin-bottom:0"><strong>Agents:</strong> Client Comms + Lead Swarm + Proposal Bot + Sentry</p>
+            </div>
+            <div class="card">
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+                    <h3 style="margin:0">Legal / Accounting</h3>
+                    <span class="badge badge-tier2">Tier 2</span>
+                </div>
+                <p style="margin-bottom:8px"><strong>Use cases:</strong> Client intake, document management, billing</p>
+                <p style="margin-bottom:0"><strong>Agents:</strong> Lead Swarm + Invoice Flow + Client Comms + Proposal Bot</p>
+            </div>
+        </div>
+        <p style="font-size:0.875rem">Industry packs already configured for: <strong>Agency</strong>, <strong>Tradie</strong>, <strong>Content Creator</strong>. Each pack customises AI persona, KPI widgets, feature defaults, and terminology.</p>
+    </section>
+
+    <!-- 3. AGENT CATALOG -->
+    <section id="agents">
+        <h2>3. Agent Catalog <span style="color:var(--brand);font-size:0.875rem;font-weight:400">(11 Agents)</span></h2>
+        <p>All agents use the <strong>3-tier model router</strong> for cost-optimal inference. Confidence routing: <strong>≥85%</strong> auto-act / <strong>55–85%</strong> ask human / <strong>&lt;55%</strong> escalate</p>
+
+        <div class="confidence-bar">
+            <div class="conf-auto">≥ 85% — Auto-execute</div>
+            <div class="conf-ask">55–85% — Ask human</div>
+            <div class="conf-escalate">&lt; 55% — Escalate</div>
+        </div>
+
+        <div class="card" style="padding:0 24px">
+            <div class="agent-row">
+                <span class="agent-num">1</span>
+                <div>
+                    <div class="agent-name">Channel Triage <span class="badge badge-built">Built</span></div>
+                    <div class="agent-meta">Haiku 70% / Sonnet 30% · <span class="agent-cost">~$20/mo</span></div>
+                    <div class="agent-meta">Classifies incoming messages, routes to correct agent/human. Triggers every 5 min via cron.</div>
+                </div>
+            </div>
+            <div class="agent-row">
+                <span class="agent-num">2</span>
+                <div>
+                    <div class="agent-name">Lead Swarm <span class="badge badge-built">Built</span></div>
+                    <div class="agent-meta">Haiku + Sonnet · <span class="agent-cost">~$50/mo</span></div>
+                    <div class="agent-meta">Discovers leads, scores them, sends auto-acknowledgements. Sub-2-minute response target for hot leads.</div>
+                </div>
+            </div>
+            <div class="agent-row">
+                <span class="agent-num">3</span>
+                <div>
+                    <div class="agent-name">Invoice Flow <span class="badge badge-built">Built</span></div>
+                    <div class="agent-meta">Haiku + Sonnet · <span class="agent-cost">~$10/mo</span></div>
+                    <div class="agent-meta">NL creation ("invoice Sezer for the website"), PDF gen, email send. Duplicate detection, lifecycle tracking, Stripe payment links.</div>
+                </div>
+            </div>
+            <div class="agent-row">
+                <span class="agent-num">4</span>
+                <div>
+                    <div class="agent-name">Client Comms (PA) <span class="badge badge-built">Built</span></div>
+                    <div class="agent-meta">Sonnet · <span class="agent-cost">~$20–40/mo</span></div>
+                    <div class="agent-meta">Drafts client responses with voice matching &amp; relationship context. 12 tools, agentic loop, SSE streaming.</div>
+                </div>
+            </div>
+            <div class="agent-row">
+                <span class="agent-num">5</span>
+                <div>
+                    <div class="agent-name">Sentry Monitor <span class="badge badge-built">Built</span></div>
+                    <div class="agent-meta">Haiku (cheap) · <span class="agent-cost">~$10/mo</span></div>
+                    <div class="agent-meta">Background monitoring, alert escalation, watch management. Runs every 5 min.</div>
+                </div>
+            </div>
+            <div class="agent-row">
+                <span class="agent-num">6</span>
+                <div>
+                    <div class="agent-name">Proposal Bot <span class="badge badge-built">Built</span></div>
+                    <div class="agent-meta">Opus + Sonnet · <span class="agent-cost">~$30–40/mo</span></div>
+                    <div class="agent-meta">Generates tiered proposals from briefs, PDF output. Status tracking: draft → sent → viewed → accepted → declined.</div>
+                </div>
+            </div>
+            <div class="agent-row">
+                <span class="agent-num">7</span>
+                <div>
+                    <div class="agent-name">Ad Script Gen <span class="badge badge-built">Built</span></div>
+                    <div class="agent-meta">Opus + Sonnet · <span class="agent-cost">~$30/mo</span></div>
+                    <div class="agent-meta">Video/social ad scripts, hook variations, platform-adapted. Supports Reels 15s, TikTok 30s, Shorts 60s, Feed 15–30s.</div>
+                </div>
+            </div>
+            <div class="agent-row">
+                <span class="agent-num">8</span>
+                <div>
+                    <div class="agent-name">AI Search Optimiser <span class="badge badge-built">Built</span></div>
+                    <div class="agent-meta">Sonnet + Haiku · <span class="agent-cost">~$20/mo</span></div>
+                    <div class="agent-meta">Audits AI visibility (ChatGPT, Gemini, Perplexity, Claude). First-mover advantage — low competition, $2k/mo service opportunity.</div>
+                </div>
+            </div>
+            <div class="agent-row">
+                <span class="agent-num">9</span>
+                <div>
+                    <div class="agent-name">Tender Hunter <span class="badge badge-built">Built</span></div>
+                    <div class="agent-meta">Opus + Sonnet + Haiku · <span class="agent-cost">~$1–2k/mo</span></div>
+                    <div class="agent-meta">Scrapes AusTender + state portals, compliance checking, fit scoring. Response draft generation. 99%+ margin vs tender consultants.</div>
+                </div>
+            </div>
+            <div class="agent-row">
+                <span class="agent-num">10</span>
+                <div>
+                    <div class="agent-name">Client Onboarding <span class="badge badge-built">Built</span></div>
+                    <div class="agent-meta">Sonnet + Haiku · <span class="agent-cost">~$30–40/mo</span></div>
+                    <div class="agent-meta">Auto Asana project creation, welcome emails, credential requests. Triggers on deal acceptance.</div>
+                </div>
+            </div>
+            <div class="agent-row">
+                <span class="agent-num">11</span>
+                <div>
+                    <div class="agent-name">Scheduler <span class="badge badge-built">Built</span></div>
+                    <div class="agent-meta">System · <span class="agent-cost">included</span></div>
+                    <div class="agent-meta">Orchestrates all agent execution, manages task queue. Runs every minute.</div>
+                </div>
+            </div>
+        </div>
+        <p style="text-align:center;margin-top:16px;font-weight:600;color:var(--foreground)">Total: 11 autonomous agents, all code-complete with tests.</p>
+    </section>
+
+    <!-- 4. PRICING -->
+    <section id="pricing">
+        <h2>4. Pricing Strategy</h2>
+
+        <h4>Subscription Tiers (Stripe-integrated, live)</h4>
+        <div style="overflow-x:auto">
+            <table>
+                <thead>
+                    <tr><th>Tier</th><th>Price</th><th>Channels</th><th>Leads</th><th>Seats</th><th>Key Features</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Free</strong></td><td>$0</td><td>1</td><td>50</td><td>1</td><td>Basic sentry, limited chat</td></tr>
+                    <tr><td><strong>Starter</strong></td><td>~$199/mo</td><td>3</td><td>500</td><td>1</td><td>Core agents</td></tr>
+                    <tr><td><strong>Growth</strong></td><td>~$349/mo</td><td>10</td><td>Unlimited</td><td>5</td><td>Advanced agents + roles, proposals, multi-user</td></tr>
+                    <tr><td><strong>Scale</strong></td><td>~$999+/mo</td><td>Unlimited</td><td>Unlimited</td><td>99</td><td>All agents, all roles, enterprise features</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h4>Per-Agent Add-Ons</h4>
+        <div class="card">
+            <table style="margin-bottom:0">
+                <tbody>
+                    <tr><td>Base agents (Sentry, Triage, Comms)</td><td style="text-align:right;color:var(--brand)">Included in tier</td></tr>
+                    <tr><td>Lead Swarm</td><td style="text-align:right">~$50/mo</td></tr>
+                    <tr><td>Invoice Flow</td><td style="text-align:right">~$10/mo</td></tr>
+                    <tr><td>Proposal Bot</td><td style="text-align:right">~$30–40/mo</td></tr>
+                    <tr><td>Tender Hunter</td><td style="text-align:right">$1–2k/mo (enterprise, custom)</td></tr>
+                    <tr><td>Ad Script Gen</td><td style="text-align:right">~$30/mo</td></tr>
+                    <tr><td>AI Search Optimiser</td><td style="text-align:right">~$20/mo</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h4>Key Pricing Facts for Investors</h4>
+        <div class="pricing-highlight">
+            <div class="stat-grid" style="margin-bottom:0">
+                <div class="stat-card" style="background:transparent;border:none">
+                    <div class="stat-value">$4–59</div>
+                    <div class="stat-label">API cost per client/mo</div>
+                </div>
+                <div class="stat-card" style="background:transparent;border:none">
+                    <div class="stat-value">70–98%</div>
+                    <div class="stat-label">Margin at $200/mo</div>
+                </div>
+                <div class="stat-card" style="background:transparent;border:none">
+                    <div class="stat-value">1 client</div>
+                    <div class="stat-label">Covers all infra ($49/mo)</div>
+                </div>
+                <div class="stat-card" style="background:transparent;border:none">
+                    <div class="stat-value">$200/mo</div>
+                    <div class="stat-label">Andy's founder deal</div>
+                </div>
+            </div>
+        </div>
+
+        <h4>Retention Strategy</h4>
+        <blockquote>"If we make them so reliant on our service because it does literally everything... it's going to be so difficult for them to leave." — Andy</blockquote>
+        <div class="card">
+            <p style="margin-bottom:8px">• 30-day free trial</p>
+            <p style="margin-bottom:8px">• Unified inbox + Invoice Flow as free-tier hook</p>
+            <p style="margin-bottom:8px">• 15-day check-in call to upsell</p>
+            <p style="margin-bottom:0">• Modular upsell: start cheap, prove value, add agents</p>
+        </div>
+
+        <h4>Revenue Projections</h4>
+        <div style="overflow-x:auto">
+            <table>
+                <thead>
+                    <tr><th>Timeline</th><th>Clients</th><th>MRR</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Month 1</td><td>1 (Andy)</td><td style="color:var(--brand)">$200</td></tr>
+                    <tr><td>Month 3</td><td>3–5 beta</td><td style="color:var(--brand)">$1,000–1,500</td></tr>
+                    <tr><td>Month 6</td><td>5–10</td><td style="color:var(--brand)">$2,500–5,000</td></tr>
+                    <tr><td>Month 9</td><td>10–20 (launch)</td><td style="color:var(--brand)">$5,000–8,000</td></tr>
+                    <tr><td>Month 12</td><td>20+ (scale)</td><td style="color:var(--brand);font-weight:600">$15,000+</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- 5. DEMO FLOWS -->
+    <section id="demos">
+        <h2>5. Key Demo Flows <span style="font-size:0.875rem;font-weight:400;color:var(--muted-foreground)">(Show in This Order)</span></h2>
+
+        <div class="flow-step">
+            <div class="flow-num">1</div>
+            <div>
+                <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+                    <span class="flow-title">"The WhatsApp Magic"</span>
+                    <span class="flow-time">30 sec — OPEN WITH THIS</span>
+                </div>
+                <div class="flow-desc"><strong>Show:</strong> Voice note → "Hey Bit, invoice John for the bathroom reno, $850"<br>BitBit resolves entity, creates invoice, generates PDF, queues for approval.</div>
+                <div class="flow-impact">💡 Jaw-drop moment. "Send a voice note, problem disappears."</div>
+            </div>
+        </div>
+
+        <div class="flow-step">
+            <div class="flow-num">2</div>
+            <div>
+                <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+                    <span class="flow-title">"The Dashboard"</span>
+                    <span class="flow-time">60 sec</span>
+                </div>
+                <div class="flow-desc"><strong>Show:</strong> Log into app.bitbit.chat → Dashboard with KPI cards, Kanban board. Click through: Unified Inbox → Contacts with relationship scores → Leads pipeline → Approvals queue.</div>
+                <div class="flow-impact">💡 Shows breadth. "This replaces HubSpot + Front + Asana."</div>
+            </div>
+        </div>
+
+        <div class="flow-step">
+            <div class="flow-num">3</div>
+            <div>
+                <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+                    <span class="flow-title">"The AI Chat"</span>
+                    <span class="flow-time">30 sec</span>
+                </div>
+                <div class="flow-desc"><strong>Show:</strong> Chat with BitBit in the dashboard → Ask "What's overdue?" BitBit responds with context-aware business intelligence.</div>
+                <div class="flow-impact">💡 Shows the brain. It KNOWS the business.</div>
+            </div>
+        </div>
+
+        <div class="flow-step">
+            <div class="flow-num">4</div>
+            <div>
+                <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+                    <span class="flow-title">"Lead Response Speed"</span>
+                    <span class="flow-time">30 sec</span>
+                </div>
+                <div class="flow-desc"><strong>Show:</strong> New lead email arrives → Lead Swarm classifies → Auto-acknowledgement drafted → Approval queued → Approved → Sent in under 2 minutes.</div>
+                <div class="flow-impact">💡 "Speed is so important in business."</div>
+            </div>
+        </div>
+
+        <div class="flow-step">
+            <div class="flow-num">5</div>
+            <div>
+                <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+                    <span class="flow-title">"Industry Packs"</span>
+                    <span class="flow-time">30 sec</span>
+                </div>
+                <div class="flow-desc"><strong>Show:</strong> Switch between Agency / Tradie / Content Creator packs. Different KPIs, different terminology, different agent bundles.</div>
+                <div class="flow-impact">💡 Shows scalability across verticals. Same platform, infinite niches.</div>
+            </div>
+        </div>
+
+        <div class="flow-step">
+            <div class="flow-num">6</div>
+            <div>
+                <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+                    <span class="flow-title">"Client Portal"</span>
+                    <span class="flow-time">30 sec</span>
+                </div>
+                <div class="flow-desc"><strong>Show:</strong> Client-facing portal → Projects, Invoices, Files, Requests. White-label, magic link login (no passwords for clients).</div>
+                <div class="flow-impact">💡 Shows enterprise readiness.</div>
+            </div>
+        </div>
+
+        <div class="flow-step">
+            <div class="flow-num">7</div>
+            <div>
+                <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+                    <span class="flow-title">"Revenue Intelligence"</span>
+                    <span class="flow-time">30 sec</span>
+                </div>
+                <div class="flow-desc"><strong>Show:</strong> Cash flow forecasting, client scoring, collection accelerator.</div>
+                <div class="flow-impact">💡 Shows this isn't just comms — it's a business brain.</div>
+            </div>
+        </div>
+
+        <div class="card" style="border-color:rgba(234,179,8,0.3);background:rgba(234,179,8,0.05);margin-top:16px">
+            <h3 style="color:#facc15;font-size:0.9375rem">⚠️ Demo Tip: Always test before demos!</h3>
+            <p style="margin-bottom:0;font-size:0.875rem">Andy learned this the hard way: <em>"We went in there to use the document editing and it wasn't working... I would assume you would have tested it prior."</em> — Mar 21 meeting about LegalSign demo failure.</p>
+        </div>
+    </section>
+
+    <!-- 6. SALES POSITIONING -->
+    <section id="sales">
+        <h2>6. Sales Positioning</h2>
+
+        <h4>Key Talking Points</h4>
+        <div class="card-grid">
+            <div class="card">
+                <h3>"Lego Bricks, Not Monolith"</h3>
+                <p style="margin-bottom:0"><em>"Anytime a certain client comes along that needs solution ABC but not DEF, we just apply ABC."</em> Modular = lower entry price, higher expansion revenue.</p>
+            </div>
+            <div class="card">
+                <h3>"Replaces 5+ SaaS Products"</h3>
+                <p style="margin-bottom:0">HubSpot ($45/mo) + Front ($19/seat) + Lindy.ai ($49/mo) + Asana ($11/seat) + Clari ($$$) + Copilot ($29/mo) + Mem.ai ($15/mo) = <strong>$200+/seat/month</strong> → replaced by one BitBit subscription.</p>
+            </div>
+            <div class="card">
+                <h3>"I Use It Myself"</h3>
+                <p style="margin-bottom:0">Andy runs All Webbed Up on BitBit. <em>"I need to do it in order to sell it because people are going to be like show us and I'm going to say I f***ing use it."</em></p>
+            </div>
+            <div class="card">
+                <h3>"Voice-First for Trades"</h3>
+                <p style="margin-bottom:0">Electricians, plumbers, builders don't sit at computers. They send voice notes from job sites. BitBit is the only AI operations tool built for that.</p>
+            </div>
+            <div class="card">
+                <h3>"Enterprise Tender Play"</h3>
+                <p style="margin-bottom:0">Tender Hunter at $1–2k/mo vs $2–30k tender consultants = <strong>99%+ margin</strong>. Government tender matching, compliance checking, response drafting.</p>
+            </div>
+            <div class="card">
+                <h3>"AI Search — First Mover"</h3>
+                <p style="margin-bottom:0">New service: rank businesses on AI chat engines (ChatGPT, Gemini, Perplexity). Low competition. <strong>$2k/month</strong> pricing opportunity.</p>
+            </div>
+        </div>
+
+        <h4>Objection Handling</h4>
+        <div class="card">
+            <p><strong>"How is this different from ChatGPT?"</strong><br>ChatGPT doesn't know your business. BitBit has a semantic memory layer that learns your contacts, projects, rates, and communication style. It connects to 20 channels and takes real actions.</p>
+            <p><strong>"What about Lindy / other AI assistants?"</strong><br>They're generic. BitBit has industry-specific agent bundles that snap in per vertical. And the confidence routing means it knows when to act vs. when to ask.</p>
+            <p><strong>"Is it actually reliable?"</strong><br>Confidence routing: ≥85% auto-act, 55–85% ask first, &lt;55% escalate. Circuit breaker, dead letter queue, cost guard, duplicate detection. 719 tests across 51 files. Production-grade reliability.</p>
+            <p style="margin-bottom:0"><strong>"Why would I switch from my current tools?"</strong><br><em>"If we make them so reliant on our service because it does literally everything... it's going to be so difficult for them to leave."</em> Consolidation play — one system instead of six.</p>
+        </div>
+    </section>
+
+    <!-- 7. QUOTES -->
+    <section id="quotes">
+        <h2>7. Andy's Own Quotes <span style="font-size:0.875rem;font-weight:400;color:var(--muted-foreground)">(Verbatim — Use for Credibility)</span></h2>
+
+        <div class="quote-card">
+            <div class="quote-context">On the Core Value — Feb 19</div>
+            <div class="quote-text">"Hey remind me to do this or hey Bit prepare an email for this guy for a quote or for an invoice... that'll be so f***ing killer dude because speed is so important in business."</div>
+        </div>
+
+        <div class="quote-card">
+            <div class="quote-context">On Pricing Confidence — Feb 19, re: Tender Hunter</div>
+            <div class="quote-text">"I know people that will pay for that if it's working."</div>
+        </div>
+
+        <div class="quote-card">
+            <div class="quote-context">On Proof of Product — Feb 22</div>
+            <div class="quote-text">"I need to do it in order to sell it because people are going to be like show us and I'm going to say I f***ing use it."</div>
+        </div>
+
+        <div class="quote-card">
+            <div class="quote-context">On Modularity — Feb 19</div>
+            <div class="quote-text">"Anytime a certain client comes along that needs solution ABC but not DEF we just apply ABC."</div>
+        </div>
+
+        <div class="quote-card">
+            <div class="quote-context">On Retention / Moat — Feb 25</div>
+            <div class="quote-text">"If we make them so reliant on our service because it does literally everything... it's going to be so difficult for them to leave."</div>
+        </div>
+
+        <div class="quote-card">
+            <div class="quote-context">On Revenue Urgency — Feb 22</div>
+            <div class="quote-text">"Charge people for this s*** bro because if it's costing you that much."</div>
+        </div>
+
+        <div class="quote-card">
+            <div class="quote-context">On Conversion — Feb 25</div>
+            <div class="quote-text">"I guarantee you half of them are going to say yes. Of the half that say yes a good percentage are going to want more s***."</div>
+        </div>
+
+        <div class="quote-card">
+            <div class="quote-context">On Pipeline — Mar 21</div>
+            <div class="quote-text">"I've probably had 20 leads come in the last week or two weeks... there's like out of the 20 probably three or four of them actually building... so there's 10 g's worth of work there I reckon minimum."</div>
+        </div>
+
+        <div class="quote-card">
+            <div class="quote-context">On BitBit Funding Model — Mar 21</div>
+            <div class="quote-text">"If we can get even just one job that's 10 grand a month it's like 2k to BitBit every month, that's enough for ad spend."</div>
+        </div>
+    </section>
+
+    <!-- 8. TECH ARCHITECTURE -->
+    <section id="tech">
+        <h2>8. Technical Architecture <span style="font-size:0.875rem;font-weight:400;color:var(--muted-foreground)">(Investor-Friendly)</span></h2>
+
+        <h4>The Stack</h4>
+        <div style="margin-bottom:20px">
+            <span class="tech-tag">Next.js 16</span>
+            <span class="tech-tag">React 19</span>
+            <span class="tech-tag">Supabase (Postgres)</span>
+            <span class="tech-tag">Anthropic Claude</span>
+            <span class="tech-tag">Pinecone</span>
+            <span class="tech-tag">Voyage AI</span>
+            <span class="tech-tag">Resend</span>
+            <span class="tech-tag">Stripe</span>
+            <span class="tech-tag">Sentry</span>
+            <span class="tech-tag">Vercel</span>
+            <span class="tech-tag">Fly.io</span>
+            <span class="tech-tag">Cloudflare</span>
+        </div>
+
+        <h4>The AI Brain — 3-Tier Model Router</h4>
+        <div style="overflow-x:auto">
+            <table>
+                <thead>
+                    <tr><th>Tier</th><th>Model</th><th>Use Case</th><th>Cost / 1M Input</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Classification</strong></td><td>Haiku 4.5</td><td>Triage, parsing, labelling</td><td style="color:var(--brand)">$0.25</td></tr>
+                    <tr><td><strong>Conversation</strong></td><td>Sonnet 4.5</td><td>Chat, comms, general tasks</td><td style="color:var(--brand)">$3.00</td></tr>
+                    <tr><td><strong>Synthesis</strong></td><td>Opus 4</td><td>Strategy, complex analysis</td><td style="color:var(--brand)">$15.00</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <p style="font-size:0.875rem">Auto-routes by complexity. Target distribution: <strong>Haiku 70%</strong> / <strong>Sonnet 25%</strong> / <strong>Opus 5%</strong>.</p>
+
+        <h4>Confidence Routing (The Innovation)</h4>
+        <div class="confidence-bar">
+            <div class="conf-auto">≥ 85% — Auto-execute (fast, no human needed)</div>
+            <div class="conf-ask">55–85% — Queue for approval</div>
+            <div class="conf-escalate">&lt; 55% — Escalate</div>
+        </div>
+        <p style="font-size:0.875rem">Thresholds configurable per-agent and per-org. This is what separates BitBit from competitors — it knows <strong>WHEN</strong> to act vs. when to ask.</p>
+
+        <h4>Key Numbers</h4>
+        <div class="stat-grid">
+            <div class="stat-card"><div class="stat-value">204</div><div class="stat-label">API Endpoints</div></div>
+            <div class="stat-card"><div class="stat-value">272</div><div class="stat-label">React Components</div></div>
+            <div class="stat-card"><div class="stat-value">22</div><div class="stat-label">Scheduled Cron Jobs</div></div>
+            <div class="stat-card"><div class="stat-value">27</div><div class="stat-label">Dashboard Tabs</div></div>
+            <div class="stat-card"><div class="stat-value">20</div><div class="stat-label">Channel Integrations</div></div>
+            <div class="stat-card"><div class="stat-value">11</div><div class="stat-label">AI Agents</div></div>
+            <div class="stat-card"><div class="stat-value">118</div><div class="stat-label">DB Migrations</div></div>
+            <div class="stat-card"><div class="stat-value">719</div><div class="stat-label">Tests / 51 Files</div></div>
+        </div>
+
+        <h4>Semantic Memory System ("Memory Palace")</h4>
+        <div class="card">
+            <p style="margin-bottom:8px">• Stores, recalls, consolidates, and forgets context automatically</p>
+            <p style="margin-bottom:8px">• Entity resolution: 5-step fuzzy matching across contacts</p>
+            <p style="margin-bottom:8px">• Knowledge graph: connects conversations, contacts, tasks, history</p>
+            <p style="margin-bottom:8px">• GDPR-compliant memory deletion</p>
+            <p style="margin-bottom:0"><strong>Why it matters:</strong> <em>"Invoice Sezer for the usual"</em> → BitBit KNOWS who Sezer is, what the work was, the rate, and that it was already invoiced.</p>
+        </div>
+
+        <h4>Security Highlights</h4>
+        <div class="card">
+            <p style="margin-bottom:8px">• Row-level security on every table (org isolation)</p>
+            <p style="margin-bottom:8px">• AI prompt injection detection and neutralisation</p>
+            <p style="margin-bottom:8px">• GDPR soft delete with data anonymisation</p>
+            <p style="margin-bottom:8px">• Per-agent and per-role AI spending limits</p>
+            <p style="margin-bottom:8px">• Circuit breaker prevents cascading failures</p>
+            <p style="margin-bottom:0">• Full audit trail of all actions</p>
+        </div>
+    </section>
+
+    <!-- 9. WHAT'S LIVE -->
+    <section id="live">
+        <h2>9. What's Live Right Now <span style="font-size:0.875rem;font-weight:400;color:var(--brand)">app.bitbit.chat</span></h2>
+
+        <h4>Dashboard Pages (Built &amp; Deployed)</h4>
+        <div class="card" style="font-size:0.875rem;font-family:'SF Mono',SFMono-Regular,ui-monospace,Menlo,monospace;line-height:2">
+            <div><span style="color:var(--brand)">/dashboard</span> &nbsp;Main KPI cards, Kanban board, inbox feed</div>
+            <div><span style="color:var(--brand)">/dashboard/chat</span> &nbsp;AI conversation interface (threaded, streaming)</div>
+            <div><span style="color:var(--brand)">/dashboard/leads</span> &nbsp;Lead discovery, scoring, pipeline kanban</div>
+            <div><span style="color:var(--brand)">/dashboard/invoices</span> &nbsp;Invoice gen, PDF render, email delivery</div>
+            <div><span style="color:var(--brand)">/dashboard/contacts</span> &nbsp;Full CRM with relationship health scores</div>
+            <div><span style="color:var(--brand)">/dashboard/contacts/[x]</span> &nbsp;Individual contact detail pages</div>
+            <div><span style="color:var(--brand)">/dashboard/approvals</span> &nbsp;Confidence-based approval queue</div>
+            <div><span style="color:var(--brand)">/dashboard/activity</span> &nbsp;Real-time activity feed</div>
+            <div><span style="color:var(--brand)">/dashboard/meetings</span> &nbsp;Meeting intelligence, transcription</div>
+            <div><span style="color:var(--brand)">/dashboard/channels</span> &nbsp;Channel status, connect/disconnect</div>
+            <div><span style="color:var(--brand)">/dashboard/connections</span> &nbsp;OAuth integration management</div>
+            <div><span style="color:var(--brand)">/dashboard/settings</span> &nbsp;Connections, Automations, Appearance, Billing</div>
+            <div><span style="color:var(--brand)">/dashboard/creator-studio</span> &nbsp;Content generation &amp; scheduling</div>
+            <div><span style="color:var(--brand)">/dashboard/sentry</span> &nbsp;Autonomous monitoring agent</div>
+            <div><span style="color:var(--brand)">/dashboard/portal</span> &nbsp;Client portal management</div>
+            <div><span style="color:var(--brand)">/dashboard/medications</span> &nbsp;Health tracking (personal vertical)</div>
+            <div><span style="color:var(--brand)">/dashboard/builder</span> &nbsp;Project builder interface</div>
+        </div>
+
+        <h4>Client Portal (White-label, Built)</h4>
+        <div class="card" style="font-size:0.875rem;font-family:'SF Mono',SFMono-Regular,ui-monospace,Menlo,monospace;line-height:2">
+            <div><span style="color:var(--brand)">/portal/login</span> &nbsp;Magic link login (no passwords)</div>
+            <div><span style="color:var(--brand)">/portal/[slug]</span> &nbsp;Client dashboard</div>
+            <div><span style="color:var(--brand)">/portal/[slug]/projects</span> &nbsp;Project view (scoped to their org)</div>
+            <div><span style="color:var(--brand)">/portal/[slug]/invoices</span> &nbsp;View and pay invoices</div>
+            <div><span style="color:var(--brand)">/portal/[slug]/files</span> &nbsp;Upload/download files</div>
+            <div><span style="color:var(--brand)">/portal/[slug]/requests</span> &nbsp;Submit new requests</div>
+        </div>
+
+        <h4>Channel Integrations (20 Types — Code Complete)</h4>
+        <div style="margin-bottom:16px">
+            <span class="tech-tag">Gmail</span>
+            <span class="tech-tag">Outlook</span>
+            <span class="tech-tag">WhatsApp</span>
+            <span class="tech-tag">Slack</span>
+            <span class="tech-tag">Telegram</span>
+            <span class="tech-tag">Asana</span>
+            <span class="tech-tag">Calendly</span>
+            <span class="tech-tag">Stripe</span>
+            <span class="tech-tag">Google Calendar</span>
+            <span class="tech-tag">GSC</span>
+            <span class="tech-tag">GA4</span>
+            <span class="tech-tag">ClickUp</span>
+            <span class="tech-tag">Xero</span>
+            <span class="tech-tag">Facebook Messenger</span>
+            <span class="tech-tag">Instagram</span>
+            <span class="tech-tag">iMessage</span>
+            <span class="tech-tag">WordPress</span>
+            <span class="tech-tag">SMS</span>
+            <span class="tech-tag">Apple Calendar</span>
+            <span class="tech-tag">Apple Reminders</span>
+        </div>
+        <p style="font-size:0.875rem">17 have unified inbox adapters with deduplication.</p>
+    </section>
+
+    <!-- 10. QUICK REFERENCE -->
+    <section id="numbers">
+        <h2>10. Quick Reference — Numbers to Know Cold</h2>
+        <div class="stat-grid">
+            <div class="stat-card"><div class="stat-value">204</div><div class="stat-label">Endpoints</div></div>
+            <div class="stat-card"><div class="stat-value">272</div><div class="stat-label">Components</div></div>
+            <div class="stat-card"><div class="stat-value">118</div><div class="stat-label">DB Migrations</div></div>
+            <div class="stat-card"><div class="stat-value">11</div><div class="stat-label">Autonomous Agents</div></div>
+            <div class="stat-card"><div class="stat-value">20</div><div class="stat-label">Integrations (17 unified)</div></div>
+            <div class="stat-card"><div class="stat-value">27</div><div class="stat-label">Dashboard Tabs</div></div>
+            <div class="stat-card"><div class="stat-value">719</div><div class="stat-label">Tests / 51 Files</div></div>
+            <div class="stat-card"><div class="stat-value">$0–$999+</div><div class="stat-label">Pricing Range</div></div>
+            <div class="stat-card"><div class="stat-value">$10–50</div><div class="stat-label">Per Agent / Month</div></div>
+            <div class="stat-card"><div class="stat-value">$1–2k</div><div class="stat-label">Tender Hunter / Month</div></div>
+            <div class="stat-card"><div class="stat-value">70–98%</div><div class="stat-label">API Margins</div></div>
+            <div class="stat-card"><div class="stat-value">$15k+</div><div class="stat-label">Target MRR Year 1</div></div>
+            <div class="stat-card"><div class="stat-value">$200+</div><div class="stat-label">SaaS Replaced / Seat</div></div>
+            <div class="stat-card"><div class="stat-value">3</div><div class="stat-label">Industry Packs Live</div></div>
+            <div class="stat-card"><div class="stat-value">1 client</div><div class="stat-label">Break-even</div></div>
+        </div>
+    </section>
+
+    <!-- 11. REMINDERS -->
+    <section id="reminders">
+        <h2>11. Reminders for Tomorrow</h2>
+        <div class="card" style="border-color:rgba(234,179,8,0.3);background:rgba(234,179,8,0.05)">
+            <ol class="reminder-list">
+                <li><strong>TEST THE DEMO BEFORE THE MEETING</strong> — don't repeat the LegalSign incident</li>
+                <li>Lead with the <strong>WhatsApp voice note demo</strong> — that's the jaw-drop moment</li>
+                <li>Use your own quotes about using BitBit for AWU — <strong>credibility is king</strong></li>
+                <li>Know the margins cold: <strong>70–98%</strong> depending on usage</li>
+                <li>Tender Hunter is the enterprise play: <strong>$1–2k/mo, 99%+ margin</strong></li>
+                <li>The retention moat: <em>"so reliant they can't leave"</em></li>
+                <li>R&amp;D tax rebate target: <strong>April 2026</strong> — mention if asked about funding efficiency</li>
+                <li>50/50 partnership: <strong>Tor = CTO</strong>, <strong>Andy = Sales/Commercial</strong></li>
+                <li>Entity: Delaware or Australia (accountant involved)</li>
+                <li>Pipeline right now: <strong>~20 leads</strong>, 3–4 actively building, <strong>~$10k pipeline</strong></li>
+            </ol>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <hr>
+    <p style="text-align:center;font-size:0.75rem;color:var(--muted-foreground);opacity:0.5">
+        Synthesised from: Cluely Feb 18 (15 sessions), Feb 19/22/25 sessions, Mar 21 meeting transcript, BitBit codebase audit (25 Mar 2026), comprehensive roadmap, investor feature showcase, expectations-vs-reality pressure test document.
+    </p>
+
+</main>
+</body>
+</html>
