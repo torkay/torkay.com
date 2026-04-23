@@ -1,71 +1,379 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en-AU">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="robots" content="noindex, nofollow">
-    <title>Portfolio — Tor Kay</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AWU / Mobile capability for hailo.co</title>
+<meta name="description" content="All Webbed Up. Production mobile builds. React Native, PWA, TypeScript.">
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#111;
+  --paper:#fafaf7;
+  --rule:#1a1a1a;
+  --muted:#6b6b6b;
+  --faint:#9a9a95;
+  --line:#e5e2dc;
+  --accent:#111;
+  --panel:#fff;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--paper);color:var(--ink);font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;-webkit-font-smoothing:antialiased;font-feature-settings:"ss01","cv11";line-height:1.45}
+body{padding:56px 24px 96px;max-width:1120px;margin:0 auto}
 
-        :root {
-            --background: hsl(240 10% 3.9%);
-            --foreground: hsl(0 0% 98%);
-            --muted-foreground: hsl(240 5% 64.9%);
-            --border: hsl(240 3.7% 15.9%);
-        }
+/* masthead */
+.masthead{display:flex;justify-content:space-between;align-items:flex-start;padding-bottom:20px;border-bottom:1px solid var(--rule);margin-bottom:64px}
+.brand{display:flex;flex-direction:column}
+.brand .mark{font-weight:700;font-size:14px;letter-spacing:0.02em}
+.brand .dot{color:var(--muted)}
+.brand .sub{font-size:12px;color:var(--muted);margin-top:4px;letter-spacing:0.02em;font-family:'JetBrains Mono',monospace}
+.meta{text-align:right;font-size:12px;color:var(--muted);letter-spacing:0.02em;line-height:1.65;font-family:'JetBrains Mono',monospace}
 
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+/* hero */
+.hero{margin-bottom:96px}
+.hero h1{font-size:clamp(44px,6.2vw,76px);font-weight:600;line-height:0.98;letter-spacing:-0.035em;max-width:16ch;margin-bottom:28px}
+.hero p{font-size:18px;max-width:62ch;color:var(--ink);line-height:1.55}
+.hero .tag{display:inline-block;font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);margin-bottom:28px;padding-bottom:4px;border-bottom:1px solid var(--line)}
 
-        body {
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
-            background: var(--background);
-            color: var(--muted-foreground);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 24px;
-        }
+.hero-meta{margin-top:36px;display:flex;gap:40px;padding-top:24px;border-top:1px solid var(--line)}
+.hero-stat{font-family:'JetBrains Mono',monospace}
+.hero-stat .n{font-size:22px;font-weight:600;color:var(--ink);letter-spacing:-0.01em}
+.hero-stat .l{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;margin-top:4px}
 
-        main {
-            max-width: 480px;
-            text-align: center;
-        }
+/* section divider */
+.sec-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);margin-bottom:18px;display:block}
 
-        h1 {
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: var(--foreground);
-            margin-bottom: 12px;
-            letter-spacing: -0.01em;
-        }
+/* project */
+.project{margin-bottom:112px;padding-top:36px;border-top:1px solid var(--line);position:relative}
+.project-head{display:grid;grid-template-columns:80px 56px 1fr minmax(180px,auto);gap:20px;align-items:start;margin-bottom:36px}
+.project-num{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted);padding-top:6px;letter-spacing:0.04em}
+.project-icon{width:48px;height:48px;border-radius:10px;overflow:hidden;background:#111}
+.project-icon img{width:100%;height:100%;object-fit:cover}
+.project-title-block{display:flex;flex-direction:column;gap:6px}
+.project-title{font-size:30px;font-weight:600;letter-spacing:-0.02em;line-height:1.1}
+.project-client{font-size:13px;color:var(--muted);letter-spacing:0.02em}
+.project-links{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink);text-align:right;line-height:1.7}
+.project-links a{color:var(--ink);text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px}
+.project-links .k{color:var(--muted)}
 
-        p {
-            font-size: 0.95rem;
-            line-height: 1.5;
-        }
+.project-desc{font-size:17px;max-width:72ch;margin-bottom:44px;margin-left:100px;line-height:1.55}
+.project-desc em{font-style:normal;background:#f0edde;padding:1px 6px;border-radius:2px;font-size:15px}
 
-        .spinner {
-            width: 24px;
-            height: 24px;
-            border: 2px solid var(--border);
-            border-top-color: var(--foreground);
-            border-radius: 50%;
-            margin: 0 auto 24px;
-            animation: spin 0.8s linear infinite;
-        }
+/* screenshots */
+.shots{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:28px;margin-left:100px;margin-bottom:44px}
+.shot{position:relative}
+.shot-frame{background:#111;border-radius:26px;padding:10px;display:flex;justify-content:center}
+.shot img{width:100%;max-width:240px;border-radius:18px;display:block}
+.shot-cap{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);margin-top:10px;line-height:1.4;padding-left:4px}
+.shot-num{color:var(--ink);font-weight:500}
 
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-    </style>
+/* evidence */
+.evidence{margin-left:100px;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:0;border:1px solid var(--line);background:var(--panel);margin-bottom:16px}
+.evidence-cell{padding:18px 22px;border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
+.evidence-cell:last-child{border-right:none}
+.evidence-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.evidence-value{font-size:18px;font-weight:600;letter-spacing:-0.01em;line-height:1.25}
+.evidence-sub{font-size:12px;color:var(--muted);margin-top:4px;font-family:'JetBrains Mono',monospace}
+
+/* range */
+.range{margin-top:56px}
+.range-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1px;background:var(--line);margin-top:20px}
+.range-card{background:var(--panel);padding:24px 24px 28px}
+.range-card h3{font-size:18px;font-weight:600;letter-spacing:-0.015em;margin-bottom:4px}
+.range-card .client{font-size:12px;color:var(--muted);margin-bottom:14px;font-family:'JetBrains Mono',monospace}
+.range-card .thumb{height:140px;background:#f0edde;margin-bottom:16px;border-radius:2px;overflow:hidden;display:flex;align-items:flex-start;justify-content:center}
+.range-card .thumb img{width:100%;height:100%;object-fit:cover;object-position:top}
+.range-card p{font-size:14px;color:var(--ink);line-height:1.5;margin-bottom:12px}
+.range-card .stack{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);letter-spacing:0.02em}
+.range-card .url{font-family:'JetBrains Mono',monospace;font-size:11px;margin-top:10px}
+.range-card .url a{color:var(--ink)}
+
+/* tech stack */
+.tech{margin-top:96px;padding-top:32px;border-top:1px solid var(--rule)}
+.tech h2{font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);margin-bottom:24px;font-weight:500}
+.tech-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1px;background:var(--line)}
+.tech-cell{background:var(--paper);padding:20px 22px}
+.tech-cell .cat{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:8px}
+.tech-cell .list{font-size:13.5px;line-height:1.55}
+
+/* breadth bar */
+.breadth{margin-top:56px;padding:22px 24px;background:var(--panel);border:1px solid var(--line)}
+.breadth h3{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;font-weight:500}
+.breadth p{font-size:14px;line-height:1.55}
+.breadth code{font-family:'JetBrains Mono',monospace;font-size:13px;background:#f0edde;padding:1px 6px;border-radius:2px}
+
+/* foot */
+.foot{margin-top:88px;padding-top:24px;border-top:1px solid var(--rule);display:flex;justify-content:space-between;font-size:12px;color:var(--muted);font-family:'JetBrains Mono',monospace;letter-spacing:0.02em}
+.foot a{color:var(--ink)}
+
+/* mobile */
+@media (max-width:720px){
+  body{padding:32px 20px 64px}
+  .hero h1{font-size:clamp(32px,9vw,48px)}
+  .hero p{font-size:16px}
+  .hero-meta{flex-wrap:wrap;gap:24px}
+  .project-head{grid-template-columns:1fr;gap:12px}
+  .project-num{padding-top:0}
+  .project-links{text-align:left}
+  .project-desc,.shots,.evidence{margin-left:0}
+  .project-title{font-size:24px}
+  .masthead{flex-direction:column;gap:14px}
+  .meta{text-align:left}
+}
+</style>
 </head>
 <body>
-    <main>
-        <div class="spinner" aria-hidden="true"></div>
-        <h1>Loading portfolio</h1>
-        <p>This page will be published shortly.</p>
-    </main>
+
+<header class="masthead">
+  <div class="brand">
+    <div class="mark">ALL WEBBED UP <span class="dot">/</span> AWU</div>
+    <div class="sub">allwebbedup.com.au</div>
+  </div>
+  <div class="meta">
+    Prepared for hailo.co<br>
+    April 2026
+  </div>
+</header>
+
+<section class="hero">
+  <div class="tag">Mobile capability / portfolio</div>
+  <h1>Two shipped mobile builds. Real code, real deploys.</h1>
+  <p>A cross-platform native app running in production for a golf club operator, plus a mobile-first PWA running in production for a multi-team football club. Both with auth, payments, offline, and real data. Plus range work across web apps, AI agents, and document tooling.</p>
+  <div class="hero-meta">
+    <div class="hero-stat"><div class="n">2</div><div class="l">mobile builds shipping</div></div>
+    <div class="hero-stat"><div class="n">~16k</div><div class="l">lines · TypeScript</div></div>
+    <div class="hero-stat"><div class="n">iOS + Android + Web</div><div class="l">platforms covered</div></div>
+    <div class="hero-stat"><div class="n">6+ range pieces</div><div class="l">live sites + tools</div></div>
+  </div>
+</section>
+
+<!-- Project 1: Emerald Pines GC -->
+<span class="sec-label">01 / Cross-platform native</span>
+<article class="project">
+  <div class="project-head">
+    <div class="project-num">01 / NATIVE</div>
+    <div class="project-icon"><img src="assets/golf-app-icon.png" alt="Emerald Pines GC brand mark"></div>
+    <div class="project-title-block">
+      <div class="project-title">Emerald Pines GC</div>
+      <div class="project-client">Private client, Queensland golf club operator</div>
+    </div>
+    <div class="project-links">
+      <span class="k">LIVE</span> &nbsp; <a href="https://golf-app-demo.vercel.app/">golf-app-demo.vercel.app</a><br>
+      <span class="k">STACK</span> &nbsp; React Native · Expo · Web
+    </div>
+  </div>
+
+  <p class="project-desc">Cross-platform app built from a single codebase, shipping iOS, Android, and web. Scorecard with World Handicap System calculation, tee-time booking, monthly leaderboard, player profiles with handicap trend tracking, course info, and live weather for the course. <em>One codebase, three platforms.</em></p>
+
+  <div class="shots">
+    <div class="shot">
+      <div class="shot-frame"><img src="assets/golf-01-home-iphone.png" alt="Golf app home"></div>
+      <div class="shot-cap"><span class="shot-num">01</span> &nbsp; home · course conditions, quick actions, tee times</div>
+    </div>
+    <div class="shot">
+      <div class="shot-frame"><img src="assets/golf-03-scorecard-iphone.png" alt="Golf app scorecard"></div>
+      <div class="shot-cap"><span class="shot-num">02</span> &nbsp; scorecard · WHS colour legend, hole-by-hole</div>
+    </div>
+    <div class="shot">
+      <div class="shot-frame"><img src="assets/golf-04-leaderboard-iphone.png" alt="Golf app leaderboard"></div>
+      <div class="shot-cap"><span class="shot-num">03</span> &nbsp; leaderboard · podium + full standings</div>
+    </div>
+    <div class="shot">
+      <div class="shot-frame"><img src="assets/golf-05-tee-times-iphone.png" alt="Golf app tee times"></div>
+      <div class="shot-cap"><span class="shot-num">04</span> &nbsp; tee times · date picker + join group</div>
+    </div>
+    <div class="shot">
+      <div class="shot-frame"><img src="assets/golf-06-club-iphone.png" alt="Golf app club info"></div>
+      <div class="shot-cap"><span class="shot-num">05</span> &nbsp; club · course layout, facilities</div>
+    </div>
+    <div class="shot">
+      <div class="shot-frame"><img src="assets/golf-08-profile-iphone.png" alt="Golf app profile"></div>
+      <div class="shot-cap"><span class="shot-num">06</span> &nbsp; profile · handicap trend, performance bars</div>
+    </div>
+  </div>
+
+  <div class="evidence">
+    <div class="evidence-cell">
+      <div class="evidence-label">Source lines</div>
+      <div class="evidence-value">~8,000</div>
+      <div class="evidence-sub">TypeScript / TSX</div>
+    </div>
+    <div class="evidence-cell">
+      <div class="evidence-label">Platforms</div>
+      <div class="evidence-value">iOS · Android · Web</div>
+      <div class="evidence-sub">One codebase, EAS build</div>
+    </div>
+    <div class="evidence-cell">
+      <div class="evidence-label">Tests</div>
+      <div class="evidence-value">Jest</div>
+      <div class="evidence-sub">Scoring, handicap, registration</div>
+    </div>
+    <div class="evidence-cell">
+      <div class="evidence-label">Backend</div>
+      <div class="evidence-value">Convex</div>
+      <div class="evidence-sub">Realtime · Clerk auth · Stripe</div>
+    </div>
+  </div>
+</article>
+
+<!-- Project 2: CTM -->
+<span class="sec-label">02 / Mobile-first PWA</span>
+<article class="project">
+  <div class="project-head">
+    <div class="project-num">02 / PWA</div>
+    <div class="project-icon"><img src="assets/ctm-apple-icon.png" alt="Club Team Manager brand mark"></div>
+    <div class="project-title-block">
+      <div class="project-title">Club Fines &amp; Fixtures</div>
+      <div class="project-client">Private client, amateur football club operator</div>
+    </div>
+    <div class="project-links">
+      <span class="k">LIVE</span> &nbsp; <a href="https://club-team-manager.vercel.app/">club-team-manager.vercel.app</a><br>
+      <span class="k">STACK</span> &nbsp; Next.js · PWA · Supabase
+    </div>
+  </div>
+
+  <p class="project-desc">Mobile-first Progressive Web App for multi-team club ops. Installable on iOS and Android home screens with an offline shell, bottom nav, role-based access, and row-level security. Handles fines, fixtures, results, High Court motions, and team gallery across isolated team data. <em>Shipped, runs on phones like a native app, no app store.</em></p>
+
+  <div class="shots">
+    <div class="shot">
+      <div class="shot-frame"><img src="assets/ctm-02-signin-iphone.png" alt="CTM sign in"></div>
+      <div class="shot-cap"><span class="shot-num">01</span> &nbsp; auth · tabbed sign in + passwordless</div>
+    </div>
+    <div class="shot">
+      <div class="shot-frame"><img src="assets/ctm-04-dashboard-iphone.png" alt="CTM dashboard"></div>
+      <div class="shot-cap"><span class="shot-num">02</span> &nbsp; dashboard · stats tiles, onboarding, FAB</div>
+    </div>
+    <div class="shot">
+      <div class="shot-frame"><img src="assets/ctm-05-fines-iphone.png" alt="CTM fines"></div>
+      <div class="shot-cap"><span class="shot-num">03</span> &nbsp; fines · list view + create flow</div>
+    </div>
+    <div class="shot">
+      <div class="shot-frame"><img src="assets/ctm-06-fixtures-iphone.png" alt="CTM fixtures"></div>
+      <div class="shot-cap"><span class="shot-num">04</span> &nbsp; fixtures · match schedule</div>
+    </div>
+    <div class="shot">
+      <div class="shot-frame"><img src="assets/ctm-07-court-iphone.png" alt="CTM high court"></div>
+      <div class="shot-cap"><span class="shot-num">05</span> &nbsp; high court · session motions</div>
+    </div>
+    <div class="shot">
+      <div class="shot-frame"><img src="assets/ctm-08-gallery-iphone.png" alt="CTM gallery"></div>
+      <div class="shot-cap"><span class="shot-num">06</span> &nbsp; gallery · team photo feed</div>
+    </div>
+  </div>
+
+  <div class="evidence">
+    <div class="evidence-cell">
+      <div class="evidence-label">Source lines</div>
+      <div class="evidence-value">~8,500</div>
+      <div class="evidence-sub">TypeScript / TSX</div>
+    </div>
+    <div class="evidence-cell">
+      <div class="evidence-label">Routes</div>
+      <div class="evidence-value">20</div>
+      <div class="evidence-sub">Next.js App Router</div>
+    </div>
+    <div class="evidence-cell">
+      <div class="evidence-label">Database</div>
+      <div class="evidence-value">9 tables</div>
+      <div class="evidence-sub">PostgreSQL + RLS</div>
+    </div>
+    <div class="evidence-cell">
+      <div class="evidence-label">PWA</div>
+      <div class="evidence-value">Offline · Installable</div>
+      <div class="evidence-sub">IndexedDB · Workbox</div>
+    </div>
+  </div>
+</article>
+
+<!-- Range pieces -->
+<section class="range">
+  <span class="sec-label">03 / Range · live adjacent work</span>
+
+  <div class="range-grid">
+
+    <div class="range-card">
+      <h3>BitBit</h3>
+      <div class="client">AI operations assistant · investor demo</div>
+      <div class="thumb"><img src="assets/bitbit-01-landing-iphone.png" alt="BitBit demo"></div>
+      <p>Document-driven AI agent platform. Multi-model routing (Haiku, Sonnet, Opus), Pinecone + Voyage AI vector recall, Supabase Postgres with 118 migrations, Stripe 4-tier pricing.</p>
+      <div class="stack">Next.js · Claude SDK · Pinecone · Stripe · Fly.io</div>
+      <div class="url"><a href="https://torkay.com/p/bitbit-demo-reference-8b2e07b0">torkay.com / bitbit-demo-reference</a></div>
+    </div>
+
+    <div class="range-card">
+      <h3>LegalSign</h3>
+      <div class="client">E-signature platform · production</div>
+      <div class="thumb"><img src="assets/legalsign-01-landing-iphone.png" alt="LegalSign"></div>
+      <p>Electronic signatures with DocuSign-style flows. Supabase Sydney region, AES-256 at rest, bcrypt password hashing, TLS 1.2+, row-level security. Stripe-gated pricing tiers.</p>
+      <div class="stack">Next.js · Supabase · Stripe · Clerk</div>
+      <div class="url"><a href="https://legalsign.com.au/">legalsign.com.au</a></div>
+    </div>
+
+    <div class="range-card">
+      <h3>All Webbed Up</h3>
+      <div class="client">Agency marketing site</div>
+      <div class="thumb"><img src="assets/awu-01-landing-iphone.png" alt="AWU site"></div>
+      <p>Astro static site with Google Reviews embed (5.0 / 118), client reel, services and industries nav. Edge-cached, performance-tuned.</p>
+      <div class="stack">Astro · nginx · edge CDN</div>
+      <div class="url"><a href="https://allwebbedup.com.au/">allwebbedup.com.au</a></div>
+    </div>
+
+    <div class="range-card">
+      <h3>RideRadar</h3>
+      <div class="client">Vehicle listing meta engine</div>
+      <div class="thumb"><img src="assets/rideradar-01-home-desktop.png" alt="RideRadar"></div>
+      <p>Meta-aggregator front-end for vehicle listings across Australian marketplaces. Production scraper stack behind it (Python + Crystal), beta waitlist front.</p>
+      <div class="stack">Vite · React · Python scrapers · Crystal</div>
+      <div class="url"><a href="https://rideradar.com.au/">rideradar.com.au</a></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- Tech stack -->
+<section class="tech">
+  <h2>Stack coverage</h2>
+  <div class="tech-grid">
+    <div class="tech-cell">
+      <div class="cat">Native mobile</div>
+      <div class="list">React Native · Expo SDK 54 · expo-router · EAS Build · Reanimated · expo-camera · expo-secure-store</div>
+    </div>
+    <div class="tech-cell">
+      <div class="cat">Web / PWA</div>
+      <div class="list">Next.js 15 · React 19 · TypeScript · Tailwind · shadcn / Radix · React Query · Zod · vite-plugin-pwa · Workbox</div>
+    </div>
+    <div class="tech-cell">
+      <div class="cat">Auth &amp; payments</div>
+      <div class="list">Supabase Auth · Clerk · Stripe (web + React Native) · passwordless magic links</div>
+    </div>
+    <div class="tech-cell">
+      <div class="cat">Backend / data</div>
+      <div class="list">Supabase (Postgres + RLS) · Convex realtime · IndexedDB offline · Pinecone · Voyage AI</div>
+    </div>
+    <div class="tech-cell">
+      <div class="cat">Observability</div>
+      <div class="list">Sentry · structured logging · error boundaries · crash reporting</div>
+    </div>
+    <div class="tech-cell">
+      <div class="cat">Happy to take on</div>
+      <div class="list">Swift · Kotlin · native modules · SwiftUI / Jetpack Compose where React Native doesn't cover it</div>
+    </div>
+  </div>
+</section>
+
+<!-- Breadth signal -->
+<div class="breadth">
+  <h3>Language + systems breadth · beyond the featured stack</h3>
+  <p>Production work also in <code>Python</code> (scrapers, automation, ML pipelines), <code>Crystal</code> (10x-faster single-binary scraping framework), <code>Haskell</code> (deterministic procedural world-generation engine), <code>Astro</code> (static sites with edge caching). Useful for the R&amp;D tax angle when the work counts as genuine experimental development.</p>
+</div>
+
+<footer class="foot">
+  <div>AWU · All Webbed Up</div>
+  <div>Two apps shown, live. Happy to walk through any of it on call.</div>
+</footer>
+
 </body>
 </html>
