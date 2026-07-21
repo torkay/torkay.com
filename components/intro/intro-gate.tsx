@@ -24,19 +24,43 @@
  * The try/catch is load-bearing. `sessionStorage` throws on access in Safari's
  * private mode and under some embedded webviews. Failing closed — no entrance —
  * is correct: the site must render regardless.
+ *
+ * WHY THE DECISION IS ALSO PARKED ON `window`, not just the attribute:
+ *
+ * React OWNS `<html>` — it is rendered by the root layout — and at hydration it
+ * reconciles that element's attribute set against its props. `data-intro` is not
+ * among them, so React REMOVES it. Measured, not assumed: a MutationObserver on
+ * `documentElement` recorded `data-intro="pending"` at 130ms and `null` at 334ms,
+ * three times in the hydration commit. `suppressHydrationWarning` does not help;
+ * it silences the warning, not the patch.
+ *
+ * The consequence was total: IntroSequence read the attribute in its useState
+ * initializer, saw nothing, rendered null, and the entrance never played at all.
+ *
+ * A `window` global is the one channel React cannot touch. The attribute stays
+ * because CSS needs a selector, but it is now a projection of the global rather
+ * than the source of truth — IntroSequence re-asserts it in a layout effect,
+ * which runs after the hydration commit and before paint, so the removal is
+ * never visible.
  */
+
+/** Read by IntroSequence; see the note above on why this is not just an attribute. */
+export const PHASE_KEY = "__torkayIntroPhase";
+
+export type IntroPhase = "pending" | "ready";
 
 const GATE_SCRIPT = `
 (function () {
+  var phase = 'ready';
   try {
     var seen = sessionStorage.getItem('torkay:intro');
     if (!seen && location.pathname === '/') {
       sessionStorage.setItem('torkay:intro', '1');
-      document.documentElement.dataset.intro = 'pending';
-      return;
+      phase = 'pending';
     }
   } catch (e) {}
-  document.documentElement.dataset.intro = 'ready';
+  window.${PHASE_KEY} = phase;
+  document.documentElement.dataset.intro = phase;
 })();
 `.trim();
 

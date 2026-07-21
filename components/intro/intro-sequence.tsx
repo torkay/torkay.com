@@ -1,9 +1,17 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
-import { motion, useAnimate, useReducedMotion } from "motion/react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from "react";
+import { useAnimate, useReducedMotion } from "motion/react";
 import { Signature } from "@/components/ui/signature";
 import { EASE_OUT } from "@/lib/motion";
+import { PHASE_KEY, type IntroPhase } from "./intro-gate";
 import { INTRO_FRAMES, introFrameSrc } from "./frames";
 
 /**
@@ -45,43 +53,91 @@ const BEAT_1_MS = 900;
 const SETTLE_MS = 700;
 const FAILSAFE_MS = 4000;
 
+/**
+ * The gate's decision, from the one place React cannot strip. See intro-gate.tsx
+ * — the `data-intro` attribute is removed during the hydration commit, so it
+ * cannot be read to decide anything.
+ */
+function readPhase(): IntroPhase | undefined {
+  return (window as unknown as Record<string, IntroPhase | undefined>)[PHASE_KEY];
+}
+
+/** Sets both the global (source of truth) and the attribute (what CSS selects on). */
+function setPhase(phase: IntroPhase) {
+  (window as unknown as Record<string, IntroPhase>)[PHASE_KEY] = phase;
+  document.documentElement.dataset.intro = phase;
+}
+
 /** Idempotent; safe to call from anywhere, any number of times. */
 function releasePage() {
-  document.documentElement.dataset.intro = "ready";
+  setPhase("ready");
 }
+
+/** The gate's decision never changes after the inline script runs. */
+const subscribeNever = () => () => {};
 
 export function IntroSequence() {
   // SSR renders the overlay; the client's first render must agree with that
   // or React will complain and, worse, paint white for a frame.
-  const [show, setShow] = useState(
-    () =>
-      typeof document === "undefined" ||
-      document.documentElement.dataset.intro === "pending",
+  // The server cannot know whether this visitor has already seen the entrance,
+  // so it always emits the overlay. The client must agree during hydration and
+  // then diverge — which is exactly what useSyncExternalStore's separate server
+  // snapshot is for. Reading the phase in a useState initializer instead would
+  // make the two trees disagree, and React leaves a mismatched server subtree
+  // stranded in the DOM: six decoded images that never unmount. Measured.
+  //
+  // The phase is fixed by the time React runs — the gate script is synchronous
+  // and nothing else writes it — so there is nothing to subscribe to.
+  const claimed = useSyncExternalStore(
+    subscribeNever,
+    () => readPhase() === "pending",
+    () => true,
   );
+  const [dismissed, setDismissed] = useState(false);
+  const show = claimed && !dismissed;
   const [frame, setFrame] = useState(-1);
 
   const [scope, animate] = useAnimate();
   const fieldRef = useRef<HTMLDivElement>(null);
   const ranRef = useRef(false);
+  // Distinguishes "the entrance finished" from "an effect cleanup released the
+  // page". StrictMode's mount → cleanup → mount would otherwise read its own
+  // cleanup as a completed run and skip the sequence entirely in development.
+  const doneRef = useRef(false);
   const reduced = useReducedMotion();
 
+  // Undo React's hydration patch. The commit above this strips `data-intro`
+  // from <html> (see intro-gate.tsx for the measurement); a layout effect runs
+  // after the commit and before the browser paints, so restoring it here means
+  // the entrance CSS never lapses for even one frame.
+  useLayoutEffect(() => {
+    const phase = readPhase();
+    if (phase) document.documentElement.dataset.intro = phase;
+  });
+
   const finish = useCallback(() => {
+    doneRef.current = true;
     releasePage();
-    setShow(false);
+    setDismissed(true);
   }, []);
 
   useEffect(() => {
     if (!show || ranRef.current) return;
 
-    // Not our load after all — the failsafe or another mount already released
-    // the page. Tear down on the next tick rather than synchronously: setting
-    // state during the effect body would cascade an extra render pass for a
-    // component that is about to unmount anyway.
-    if (document.documentElement.dataset.intro !== "pending") {
+    // The sequence genuinely ran to completion — nothing left to do. Tear down
+    // on the next tick rather than synchronously: setting state during the
+    // effect body would cascade an extra render pass for a component that is
+    // about to unmount anyway.
+    if (doneRef.current) {
       releasePage();
       const id = window.setTimeout(finish, 0);
       return () => clearTimeout(id);
     }
+
+    // Reclaim the entrance. The cleanup below releases the page as a safety
+    // measure, so by this point the phase may read `ready` even though the
+    // sequence never played — that is exactly the StrictMode remount case.
+    setPhase("pending");
     ranRef.current = true;
 
     const overlay = scope.current;

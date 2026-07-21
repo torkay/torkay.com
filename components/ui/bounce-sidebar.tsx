@@ -95,7 +95,6 @@ export function BounceSidebar({
       cancelAnimationFrame(raf);
     };
     // Mount only — later moves are the animated effect below.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {

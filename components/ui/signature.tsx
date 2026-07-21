@@ -3,7 +3,11 @@
 import { useEffect, useId, useRef, useState } from "react";
 import { motion, useReducedMotion } from "motion/react";
 // opentype.js v2 ships ESM with named exports only — there is no default.
-import { load as loadFont } from "opentype.js";
+// `load()` still exists but warns on every call ("DEPRECATED! migrate to
+// opentype.parse(buffer, opt)"), and it is only a fetch wrapped around parse.
+// Doing the fetch ourselves also lets a 404 surface as a real error instead of
+// opentype trying to parse an HTML error page.
+import { parse as parseFont, type Font } from "opentype.js";
 import { cn } from "@/lib/utils";
 
 /**
@@ -54,6 +58,34 @@ export interface SignatureProps {
 }
 
 const DEFAULT_FONT = "/fonts/LastoriaBoldRegular.otf";
+
+/**
+ * One in-flight request and one parse per URL, shared across every Signature
+ * on the page and across remounts. The entrance mounts and unmounts this
+ * component under StrictMode, and re-downloading a 200KB OTF to redraw the
+ * same word is wasted time in the one place the site can least afford it.
+ */
+const fontCache = new Map<string, Promise<Font>>();
+
+function loadFont(url: string, signal?: AbortSignal): Promise<Font> {
+  let pending = fontCache.get(url);
+  if (!pending) {
+    pending = fetch(url, { signal })
+      .then((res) => {
+        if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
+        return res.arrayBuffer();
+      })
+      .then((buffer) => parseFont(buffer))
+      .catch((error) => {
+        // Never cache a failure — a transient network blip would otherwise
+        // permanently break the signature for the rest of the session.
+        fontCache.delete(url);
+        throw error;
+      });
+    fontCache.set(url, pending);
+  }
+  return pending;
+}
 
 export function Signature({
   text = "Signature",
