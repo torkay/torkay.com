@@ -26,16 +26,29 @@ export type IntroFrame = {
   readonly hold: number;
   /** Style name — documentation, and the alt text if a frame ever stands alone. */
   readonly style: string;
+  /**
+   * Fill the viewport instead of letterboxing on the black field.
+   *
+   * Only the last frame uses it, and for a specific reason: it is printed on
+   * pale cotton stock, so filling the screen turns the hand-off into a graphic
+   * match — a cream field dissolving into the site's white canvas. Letterboxed,
+   * the same frame would sit in a black surround and the transition would read
+   * as a cut instead of a continuation.
+   */
+  readonly fill?: boolean;
 };
 
-export const INTRO_FRAMES = [
+// Annotated rather than `as const satisfies`: const-narrowing drops the
+// optional `fill` from the union members that omit it, so consumers can't read
+// it without a per-member check.
+export const INTRO_FRAMES: readonly IntroFrame[] = [
   { src: "01-sketch", hold: 140, style: "charcoal construction sketch" },
   { src: "02-clay", hold: 120, style: "matte clay render" },
   { src: "03-riso", hold: 110, style: "two-colour risograph" },
   { src: "04-chrome", hold: 100, style: "liquid chrome" },
   { src: "05-halftone", hold: 100, style: "CMYK halftone" },
-  { src: "06-letterpress", hold: 230, style: "photoreal letterpress" },
-] as const satisfies readonly IntroFrame[];
+  { src: "06-letterpress", hold: 230, style: "photoreal letterpress", fill: true },
+];
 
 /** Total runtime of the cut sequence. */
 export const CRASH_MS = INTRO_FRAMES.reduce((total, f) => total + f.hold, 0);

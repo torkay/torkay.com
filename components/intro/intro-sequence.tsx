@@ -73,9 +73,14 @@ export function IntroSequence() {
   useEffect(() => {
     if (!show || ranRef.current) return;
 
+    // Not our load after all — the failsafe or another mount already released
+    // the page. Tear down on the next tick rather than synchronously: setting
+    // state during the effect body would cascade an extra render pass for a
+    // component that is about to unmount anyway.
     if (document.documentElement.dataset.intro !== "pending") {
-      finish();
-      return;
+      releasePage();
+      const id = window.setTimeout(finish, 0);
+      return () => clearTimeout(id);
     }
     ranRef.current = true;
 
@@ -113,7 +118,11 @@ export function IntroSequence() {
     if (prefersReduced) {
       // Show the resolved wordmark, hold it, fade. The content, not a strobe —
       // and never an empty overlay, which would read as a broken page.
-      setFrame(INTRO_FRAMES.length - 1);
+      // Scheduled rather than set inline, so both branches drive `frame`
+      // through the same timer queue and the cleanup cancels either one.
+      after(0, () => {
+        if (!cancelled) setFrame(INTRO_FRAMES.length - 1);
+      });
       after(400, () => {
         if (cancelled) return;
         releasePage();
@@ -205,7 +214,11 @@ export function IntroSequence() {
               alt=""
               decoding="sync"
               fetchPriority={i === 0 ? "high" : "low"}
-              className="absolute inset-0 h-full w-full object-contain p-[8vw]"
+              className={
+                f.fill
+                  ? "absolute inset-0 h-full w-full object-cover"
+                  : "absolute inset-0 h-full w-full object-contain p-[8vw]"
+              }
               style={{
                 opacity: frame === i ? 1 : 0,
                 // No transition. A snap cut that eases is a dissolve.

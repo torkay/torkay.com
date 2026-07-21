@@ -4,6 +4,7 @@ import { useEffect, useLayoutEffect, useRef, useState, type ComponentProps } fro
 import Link from "next/link";
 import { motion, useAnimate, useReducedMotion } from "motion/react";
 import { arc } from "motion";
+import { snapToPixel, useDevicePixelRatio } from "@/hooks/use-device-pixel-ratio";
 import { cn } from "@/lib/utils";
 import { DUR, EASE_OUT } from "@/lib/motion";
 
@@ -24,9 +25,10 @@ const useIsomorphicLayoutEffect = typeof window !== "undefined" ? useLayoutEffec
  *
  * Three details that are easy to lose and expensive to debug:
  *
- *  1. Every position is quantised to the device pixel grid (`Math.round(v *
- *     dpr) / dpr`). On fractional-DPR displays an unquantised 6px dot renders
- *     visibly soft.
+ *  1. Every position is quantised to the device pixel grid via `snapToPixel`.
+ *     On fractional-DPR displays an unquantised 6px dot renders visibly soft.
+ *     The ratio is subscribed to rather than read once, so dragging the window
+ *     to a different-density monitor re-quantises instead of staying wrong.
  *  2. The first placement is a zero-duration snap, not an animation, and the
  *     dot stays `opacity: 0` until it lands — otherwise it visibly flies from
  *     the origin on mount.
@@ -66,13 +68,9 @@ export function BounceSidebar({
   const prevY = useRef<number | null>(null);
   const reduced = useReducedMotion();
 
-  const [dotSize, setDotSize] = useState(DOT_BASE);
+  const dpr = useDevicePixelRatio();
+  const dotSize = snapToPixel(DOT_BASE, dpr);
   const [ready, setReady] = useState(false);
-
-  useEffect(() => {
-    const dpr = window.devicePixelRatio || 1;
-    setDotSize(Math.round(DOT_BASE * dpr) / dpr);
-  }, []);
 
   // Initial placement: snap, never animate, and don't reveal until placed.
   useIsomorphicLayoutEffect(() => {
@@ -81,9 +79,7 @@ export function BounceSidebar({
     const snap = () => {
       const el = itemRefs.current[activeIndex];
       if (cancelled || !el || !dot.current) return;
-      const dpr = window.devicePixelRatio || 1;
-      const size = Math.round(DOT_BASE * dpr) / dpr;
-      const toY = Math.round((el.offsetTop + el.offsetHeight / 2 - size / 2) * dpr) / dpr;
+      const toY = snapToPixel(el.offsetTop + el.offsetHeight / 2 - dotSize / 2, dpr);
       animate(dot.current, { x: 0, y: toY }, { duration: 0 });
       prevY.current = toY;
       setReady(true);
@@ -106,8 +102,7 @@ export function BounceSidebar({
     const el = itemRefs.current[activeIndex];
     if (!el || !dot.current) return;
 
-    const dpr = window.devicePixelRatio || 1;
-    const toY = Math.round((el.offsetTop + el.offsetHeight / 2 - dotSize / 2) * dpr) / dpr;
+    const toY = snapToPixel(el.offsetTop + el.offsetHeight / 2 - dotSize / 2, dpr);
 
     if (prevY.current === null) {
       animate(dot.current, { x: 0, y: toY }, { duration: 0 });
@@ -133,7 +128,7 @@ export function BounceSidebar({
     });
 
     animate(dot.current, { x: 0, y: toY }, { duration: DUR.micro + 0.1, ease: EASE_OUT, path });
-  }, [activeIndex, animate, dot, dotSize, reduced]);
+  }, [activeIndex, animate, dot, dotSize, dpr, reduced]);
 
   const select = (index: number) => {
     if (value === undefined) setInternalValue(index);

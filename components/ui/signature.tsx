@@ -78,9 +78,14 @@ export function Signature({
   const maskId = `signature-${useId().replace(/:/g, "")}`;
 
   // onComplete is read from a ref so a caller passing an inline arrow doesn't
-  // retrigger the whole draw on every parent render.
+  // retrigger the whole draw on every parent render. Synced in an effect
+  // rather than assigned during render — writing a ref while rendering is a
+  // side effect, and breaks under concurrent rendering where a render can be
+  // thrown away.
   const onCompleteRef = useRef(onComplete);
-  onCompleteRef.current = onComplete;
+  useEffect(() => {
+    onCompleteRef.current = onComplete;
+  }, [onComplete]);
 
   useEffect(() => {
     let cancelled = false;

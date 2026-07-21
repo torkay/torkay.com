@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { useTheme } from "next-themes";
 import { Moon, Sun } from "lucide-react";
+import { useMounted } from "@/hooks/use-mounted";
 
 /**
  * Theme toggle.
@@ -13,10 +13,8 @@ import { Moon, Sun } from "lucide-react";
  * shift the nav sideways when it appears. A same-sized empty box costs neither.
  */
 export function ThemeToggle() {
-  const [mounted, setMounted] = useState(false);
+  const mounted = useMounted();
   const { resolvedTheme, setTheme } = useTheme();
-
-  useEffect(() => setMounted(true), []);
 
   const isDark = resolvedTheme === "dark";
 
