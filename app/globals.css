@@ -302,6 +302,52 @@
 }
 
 /* ───────────────────────────────────────────────────────────────────────────
+   Entrance choreography
+
+   `.intro-anim` marks anything that should arrive as part of the page's
+   entrance. While `<html data-intro="pending">` — i.e. the entrance sequence
+   is on screen — those animations are held at frame zero. IntroSequence flips
+   the attribute to `ready` one beat BEFORE it finishes, so the page is already
+   arriving underneath the lifting field. One swell, not two acts.
+
+   Held with `animation-play-state`, not `display: none`: the elements keep
+   their layout boxes the whole time, so nothing reflows at the hand-off.
+   ─────────────────────────────────────────────────────────────────────────── */
+
+/* The overlay is server-rendered unconditionally — the server cannot know
+   whether this visitor has already seen it. IntroGate runs before the body is
+   parsed and stamps `ready` for returning visitors; this rule then keeps the
+   overlay from ever painting for them. Without it they would get a black flash
+   until hydration removed the element. */
+[data-intro="ready"] [data-intro-overlay] {
+  display: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .intro-anim {
+    animation: intro-arrive var(--duration-block) var(--ease-out-soft) both;
+    animation-delay: calc(var(--intro-index, 0) * 60ms);
+  }
+
+  [data-intro="pending"] .intro-anim {
+    animation-play-state: paused;
+  }
+}
+
+@keyframes intro-arrive {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+    filter: blur(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: blur(0);
+  }
+}
+
+/* ───────────────────────────────────────────────────────────────────────────
    Reduced motion — non-negotiable, and enforced globally rather than
    remembered per-component.
    ─────────────────────────────────────────────────────────────────────────── */

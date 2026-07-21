@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { ThemeProvider } from "@/components/chrome/theme-provider";
+import { IntroGate } from "@/components/intro/intro-gate";
 import { fontVariables } from "@/lib/fonts";
 import { site } from "@/lib/site";
 import "./globals.css";
@@ -33,6 +34,9 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${fontVariables} h-full`} suppressHydrationWarning>
       <body className="flex min-h-full flex-col">
+        {/* First thing in the body, so `data-intro` is set before any of the
+            markup below it is parsed — including the entrance overlay. */}
+        <IntroGate />
         <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>

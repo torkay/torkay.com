@@ -2,7 +2,8 @@
 
 import { useEffect, useId, useRef, useState } from "react";
 import { motion, useReducedMotion } from "motion/react";
-import opentype from "opentype.js";
+// opentype.js v2 ships ESM with named exports only — there is no default.
+import { load as loadFont } from "opentype.js";
 import { cn } from "@/lib/utils";
 
 /**
@@ -84,8 +85,7 @@ export function Signature({
   useEffect(() => {
     let cancelled = false;
 
-    opentype
-      .load(fontUrl)
+    loadFont(fontUrl)
       .then((font) => {
         if (cancelled) return;
 
