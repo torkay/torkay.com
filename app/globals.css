@@ -1,0 +1,318 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   torkay.com — token layer
+
+   This file is the machine-readable half of DESIGN.md. Every value below has
+   a counterpart in that document's frontmatter; if you change one, change the
+   other. Nothing in `components/` should hard-code a colour, radius, shadow
+   or duration — it reads a token from here.
+
+   Palette structure (evidence.dev's system):
+     · one near-white canvas, one near-black ink
+     · a nine-step neutral ramp doing all the structural work
+     · exactly two saturated hues, both rationed: blue (action), green
+       (positive). Everything else on screen is neutral. That is the discipline
+       that makes evidence.dev read as a tool rather than a brochure.
+
+   Type structure (poke.com's method):
+     · display serif at one weight, tracking tightening as size grows
+     · a standing negative tracking on body copy — the premium tell
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ───────────────────────────────────────────────────────────────────────────
+   Light — the resting state of the site
+   ─────────────────────────────────────────────────────────────────────────── */
+
+:root {
+  /* Neutral ramp. evidence.dev ships Tailwind's gray scale and paints almost
+     nothing else; the restraint is the point. */
+  --neutral-50: #f9fafb;
+  --neutral-100: #f3f4f6;
+  --neutral-200: #e5e7eb;
+  --neutral-300: #d1d5db;
+  --neutral-400: #9ca3af;
+  --neutral-500: #6b7280;
+  --neutral-600: #4b5563;
+  --neutral-700: #374151;
+  --neutral-800: #1f2937;
+  --neutral-900: #111827;
+
+  /* Surfaces */
+  --canvas: #ffffff;
+  --surface: #ffffff;
+  --surface-sunken: var(--neutral-50);
+  --surface-raised: #ffffff;
+  --overlay: rgb(255 255 255 / 0.72);
+
+  /* Ink */
+  --ink: var(--neutral-900);
+  --ink-muted: var(--neutral-500);
+  --ink-subtle: var(--neutral-400);
+  --ink-inverted: #ffffff;
+
+  /* Line */
+  --line: var(--neutral-200);
+  --line-strong: var(--neutral-300);
+
+  /* Accent — evidence.dev's brand blue, hsl(216 100% 37%). The only
+     saturated hue that appears more than once per viewport. */
+  --accent: #004bbd;
+  --accent-hover: #003a94;
+  --accent-soft: #eff4fd;
+  --accent-ink: #ffffff;
+
+  /* Positive — evidence.dev's brand green, hsl(133 100% 33%). Status only. */
+  --positive: #00a824;
+  --positive-soft: #ebfaee;
+
+  /* Negative */
+  --negative: #dc2626;
+  --negative-soft: #fef2f2;
+
+  /* Signal — the one warm hue, reserved for the bounce-sidebar dot and
+     nothing else. A single point of heat in an otherwise cool palette. */
+  --signal: #fc4c01;
+
+  color-scheme: light;
+}
+
+/* ───────────────────────────────────────────────────────────────────────────
+   Dark — where the intro lives, and /terminal
+   ─────────────────────────────────────────────────────────────────────────── */
+
+.dark {
+  --neutral-50: #0a0a0b;
+  --neutral-100: #131417;
+  --neutral-200: #1e2024;
+  --neutral-300: #2a2d33;
+  --neutral-400: #4b5058;
+  --neutral-500: #868d97;
+  --neutral-600: #a8aeb7;
+  --neutral-700: #c8ccd2;
+  --neutral-800: #e3e5e8;
+  --neutral-900: #f4f5f6;
+
+  --canvas: #0a0a0b;
+  --surface: #0a0a0b;
+  --surface-sunken: #060607;
+  --surface-raised: #131417;
+  --overlay: rgb(10 10 11 / 0.72);
+
+  --ink: var(--neutral-900);
+  --ink-muted: var(--neutral-500);
+  --ink-subtle: var(--neutral-400);
+  --ink-inverted: #0a0a0b;
+
+  --line: var(--neutral-200);
+  --line-strong: var(--neutral-300);
+
+  --accent: #5b9bff;
+  --accent-hover: #7fb2ff;
+  --accent-soft: #0e1a2e;
+  --accent-ink: #061021;
+
+  --positive: #3ddc6a;
+  --positive-soft: #0c1f13;
+
+  --negative: #f87171;
+  --negative-soft: #2a1214;
+
+  --signal: #ff6a2b;
+
+  color-scheme: dark;
+}
+
+/* ───────────────────────────────────────────────────────────────────────────
+   Theme — what Tailwind generates utilities from
+   ─────────────────────────────────────────────────────────────────────────── */
+
+@theme inline {
+  --color-canvas: var(--canvas);
+  --color-surface: var(--surface);
+  --color-surface-sunken: var(--surface-sunken);
+  --color-surface-raised: var(--surface-raised);
+  --color-overlay: var(--overlay);
+
+  --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-muted);
+  --color-ink-subtle: var(--ink-subtle);
+  --color-ink-inverted: var(--ink-inverted);
+
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-soft: var(--accent-soft);
+  --color-accent-ink: var(--accent-ink);
+
+  --color-positive: var(--positive);
+  --color-positive-soft: var(--positive-soft);
+  --color-negative: var(--negative);
+  --color-negative-soft: var(--negative-soft);
+  --color-signal: var(--signal);
+
+  --color-neutral-50: var(--neutral-50);
+  --color-neutral-100: var(--neutral-100);
+  --color-neutral-200: var(--neutral-200);
+  --color-neutral-300: var(--neutral-300);
+  --color-neutral-400: var(--neutral-400);
+  --color-neutral-500: var(--neutral-500);
+  --color-neutral-600: var(--neutral-600);
+  --color-neutral-700: var(--neutral-700);
+  --color-neutral-800: var(--neutral-800);
+  --color-neutral-900: var(--neutral-900);
+
+  /* Type. The licensed faces are listed FIRST so that dropping a purchased
+     kit into public/fonts and declaring one @font-face takes the whole site
+     over with no other edit. Until then the OFL fallbacks render.
+     See DESIGN.md § Typography → Swap slots. */
+  --font-display: "Exposure", var(--font-display-ofl), ui-serif, Georgia, serif;
+  --font-sans: "OpenRunde", var(--font-sans-ofl), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-mono-ofl), ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* Radius — evidence.dev sits tighter than poke; controls go full pill. */
+  --radius-sm: 0.375rem; /*   6px */
+  --radius-md: 0.5rem; /*     8px */
+  --radius-lg: 0.75rem; /*   12px */
+  --radius-xl: 1rem; /*      16px */
+  --radius-2xl: 1.25rem; /*  20px */
+  --radius-full: 9999px;
+
+  /* Depth — poke.com's method: many layers at very low alpha, never one dark
+     drop. Borders do structure; shadows do lift; they rarely stack. */
+  --shadow-raise:
+    0 1px 2px rgb(0 0 0 / 0.035), 0 3px 8px rgb(0 0 0 / 0.035), 0 8px 28px rgb(0 0 0 / 0.043);
+  --shadow-raise-lg:
+    0 2px 4px rgb(0 0 0 / 0.04), 0 8px 20px rgb(0 0 0 / 0.05), 0 24px 64px rgb(0 0 0 / 0.06);
+  --shadow-key: inset 0 1px 0 rgb(255 255 255 / 0.16), 0 1px 2px rgb(17 24 39 / 0.24);
+
+  /* Motion — mirrors lib/motion.ts. Both exist because CSS transitions and
+     Motion springs need the same vocabulary in two syntaxes. */
+  --ease-micro: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-out-soft: cubic-bezier(0, 0, 0.2, 1);
+  --ease-narrow: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
+
+  --duration-micro: 150ms;
+  --duration-state: 200ms;
+  --duration-overlay: 300ms;
+  --duration-word: 400ms;
+  --duration-block: 600ms;
+  --duration-splash: 800ms;
+
+  /* Layout */
+  --container-prose: 68ch;
+  --container-page: 72rem;
+}
+
+/* next/font writes the real family names onto these three variables (see
+   lib/fonts.ts); the @theme stacks above reference them, which is what keeps
+   the licensed swap slots first in line. */
+
+/* ───────────────────────────────────────────────────────────────────────────
+   Base
+   ─────────────────────────────────────────────────────────────────────────── */
+
+@layer base {
+  * {
+    border-color: var(--line);
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--canvas);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    /* poke.com's standing negative tracking, even on body copy. Most sites
+       leave this at 0; the tightness is what reads as "typeset". */
+    letter-spacing: -0.015em;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-synthesis-weight: none;
+  }
+
+  ::selection {
+    background-color: var(--accent);
+    color: var(--accent-ink);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+}
+
+/* ───────────────────────────────────────────────────────────────────────────
+   Utilities
+   ─────────────────────────────────────────────────────────────────────────── */
+
+/* The raised material. One recipe, every lifted surface — card, popover,
+   panel. Never compose a bespoke shadow at the call site. */
+@utility raise {
+  background-color: var(--surface-raised);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow-raise);
+}
+
+/* The one sanctioned flourish. Exactly one element per page may wear it —
+   poke.com applies it to a single pricing card and nothing else. */
+@property --gradient-border-rotation {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@keyframes gradient-border {
+  100% {
+    --gradient-border-rotation: 360deg;
+  }
+}
+
+@utility gradient-border {
+  position: relative;
+  isolation: isolate;
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    padding: 1px;
+    background: conic-gradient(
+      from var(--gradient-border-rotation),
+      color-mix(in oklab, var(--accent) 55%, transparent),
+      color-mix(in oklab, var(--canvas) 85%, transparent),
+      color-mix(in oklab, var(--accent) 55%, transparent)
+    );
+    mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    mask-composite: exclude;
+    animation: gradient-border 6s linear infinite;
+    z-index: -1;
+  }
+}
+
+/* ───────────────────────────────────────────────────────────────────────────
+   Reduced motion — non-negotiable, and enforced globally rather than
+   remembered per-component.
+   ─────────────────────────────────────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
